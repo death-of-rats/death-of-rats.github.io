@@ -15,10 +15,11 @@ script:
 deploy:
     provider: pages
     skip-cleanup: true
+    keep-history: true
     github-token: $GITHUB_TOKEN
     local-dir: output
     target-branch: master
     verbose: true
+    repo: death-of-rats/death-of-rats.github.io
     on:
         branch: master
-        repo: death-of-rats/death-of-rats.github.io
