@@ -2,10 +2,6 @@
 language: python
 cache: apt
 sudo: false
-branches:
-  only:
-  - master
-  - source
 addons:
   apt:
     packages:
