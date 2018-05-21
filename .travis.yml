@@ -1,0 +1,21 @@
+# Travis CI config for automated Nikola blog deployments
+language: python
+cache: apt
+sudo: false
+addons:
+  apt:
+    packages:
+    - language-pack-en-base
+branches:
+  only:
+  - source
+python:
+- 3.6
+install:
+- pip install 'Nikola[extras]'
+script:
+- nikola build && nikola deploy 
+notifications:
+    email:
+        on_success: change
+        on_failure: always
