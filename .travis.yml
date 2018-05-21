@@ -9,6 +9,7 @@ addons:
 branches:
   only:
   - source
+  - master
 python:
 - 3.6
 install:
