@@ -1,5 +1,5 @@
 <!--
-.. title: github + nikola
+.. title: 0x01 github + nikola
 .. slug: github-+-nikola
 .. date: 2018-05-21 07:00:30 UTC
 .. tags: git github nikola
