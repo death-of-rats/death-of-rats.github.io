@@ -1024,7 +1024,7 @@ FUTURE_IS_NOW = False
 
 # Allows scheduling of posts using the rule specified here (new_post -s)
 # Specify an iCal Recurrence Rule: http://www.kanzaki.com/docs/ical/rrule.html
-SCHEDULE_RULE = 'RRULE:FREQ=WEEKLY;BYDAY=MO,FR;BYHOUR=7;BYMINUTE=0;BYSECOND=30'
+SCHEDULE_RULE = 'RRULE:FREQ=WEEKLY;BYDAY=MO,FR;BYHOUR=5;BYMINUTE=0;BYSECOND=30'
 # If True, use the scheduling rule to all posts (not pages!) by default
 SCHEDULE_ALL = True
 
