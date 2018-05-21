@@ -7,7 +7,7 @@ addons:
     packages:
     - language-pack-en-base
 python:
-- 3.6
+- 3.6.5
 branches:
   except:
   - master
