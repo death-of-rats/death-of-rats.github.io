@@ -631,7 +631,7 @@ DEPLOY_COMMANDS = {
     'default': [
         "git checkout source",
         "git add -A",
-        "git commit -m 'deploy' -S",
+        "git commit -m 'travis-ci deploy'",
         "git push origin source",
         "git subtree push --prefix output/ origin master",
     ]
