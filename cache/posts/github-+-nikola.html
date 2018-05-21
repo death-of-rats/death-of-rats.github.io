@@ -1,0 +1,28 @@
+<p>How to start GitHub repo for hosting pages with Nikola. I want a branch (let us name it <code>source</code>) where I will keep my project. I plan to generate static files to some folder and push it to the <code>master</code> branch. In other words <code>master</code> branch will have my site and <code>source</code> branch will have whole Nikola engine with my post source files.</p>
+<p>I need to create new repo: <em>username.github.io</em> on GitHub page. Next clone it to local folder make my branch and push it.</p>
+<pre class="code literal-block"><span></span>git clone git@github.com:death-of-rats/death-of-rats.github.io.git
+<span class="nb">cd</span> death-of-rats.github.io.git
+git commit --allow-empty -am <span class="s2">&quot;start using repo&quot;</span>
+git branch <span class="nb">source</span>
+git checkout <span class="nb">source</span>
+git push --set-upstream origin <span class="nb">source</span>
+</pre>
+
+
+<p>And here I have empty repo with 2 branches.</p>
+<p>Now I init Nikola project in repo root folder (on branch <code>source</code>). Nikola will produce html files in <code>output</code> folder so I need after first test run split subtree for that foledr and push it to <code>master</code>:</p>
+<pre class="code literal-block"><span></span>git push origin <span class="sb">`</span>git subtree split --prefix output/ master<span class="sb">`</span>:master --force
+</pre>
+
+
+<p>Since now deploy command may looks like:</p>
+<pre class="code literal-block"><span></span>git checkout <span class="nb">source</span>
+git add -A
+git commit -m <span class="s2">&quot;deploy&quot;</span> -S
+git push origin <span class="nb">source</span>
+git subtree push --prefix output/ origin master
+</pre>
+
+
+<p>What I missed? I didn't add <code>.gitignore</code>...</p>
+<p>...<strong>PIP</strong>!</p>
