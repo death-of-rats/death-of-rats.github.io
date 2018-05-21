@@ -10,15 +10,23 @@
   <lastmod>2018-05-21T01:51:00Z</lastmod>
  </sitemap>
  <sitemap>
+  <loc>https://death-of-rats.github.io/categories/cat_configure.xml</loc>
+  <lastmod>2018-05-21T07:37:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>https://death-of-rats.github.io/categories/git-github-nikola.xml</loc>
+  <lastmod>2018-05-21T07:37:00Z</lastmod>
+ </sitemap>
+ <sitemap>
   <loc>https://death-of-rats.github.io/categories/nothing.xml</loc>
   <lastmod>2018-05-21T01:51:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://death-of-rats.github.io/rss.xml</loc>
-  <lastmod>2018-05-21T01:51:00Z</lastmod>
+  <lastmod>2018-05-21T07:37:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://death-of-rats.github.io/sitemap.xml</loc>
-  <lastmod>2018-05-21T06:17:00Z</lastmod>
+  <lastmod>2018-05-21T07:37:00Z</lastmod>
  </sitemap>
 </sitemapindex>

@@ -2,7 +2,6 @@
 language: python
 cache: apt
 sudo: false
-github-token: $GITHUB_TOKEN
 addons:
   apt:
     packages:
@@ -15,8 +14,15 @@ python:
 install:
 - pip install 'Nikola[extras]'
 script:
-- nikola build && nikola deploy 
+- nikola build 
 notifications:
     email:
         on_success: change
         on_failure: always
+deploy:
+    provider: pages
+    skip-cleanup: true
+    github-token: $GITHUB_TOKEN
+    keep-history: true
+    on:
+        branch: master
