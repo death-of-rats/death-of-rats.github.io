@@ -629,7 +629,6 @@ REDIRECTIONS = []
 # in a `nikola deploy` command as you like.
 DEPLOY_COMMANDS = {
     'default': [
-        "git checkout source",
         "git add -A",
         "git commit -m 'travis-ci deploy'",
         "git push origin source",

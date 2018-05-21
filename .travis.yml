@@ -2,6 +2,10 @@
 language: python
 cache: apt
 sudo: false
+branches:
+  only:
+  - master
+  - source
 addons:
   apt:
     packages:
@@ -21,3 +25,4 @@ deploy:
     target-branch: master
     on:
         branch: master
+        repo: death-of-rats/death-of-rats.github.io
