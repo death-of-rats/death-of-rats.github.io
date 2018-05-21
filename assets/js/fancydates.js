@@ -3,7 +3,7 @@ function fancydates(fanciness, date_format) {
         return;
     }
 
-    dates = document.getElementsByClassName('dt-published');
+    dates = $('time.published.dt-published');
 
     i = 0;
     l = dates.length;
