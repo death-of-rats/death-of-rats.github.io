@@ -629,10 +629,10 @@ REDIRECTIONS = []
 # in a `nikola deploy` command as you like.
 DEPLOY_COMMANDS = {
     'default': [
-        "git checkout gh-pages",
+        "git checkout source",
         "git add -A",
         "git commit -m 'deploy' -S",
-        "git push origin gh-pages",
+        "git push origin source",
         "git subtree push --prefix output/ origin master",
     ]
 }
@@ -641,7 +641,7 @@ DEPLOY_COMMANDS = {
 # For more details, read the manual:
 # https://getnikola.com/handbook.html#deploying-to-github
 # You will need to configure the deployment branch on GitHub.
-GITHUB_SOURCE_BRANCH = 'src'
+GITHUB_SOURCE_BRANCH = 'sources'
 GITHUB_DEPLOY_BRANCH = 'master'
 
 # The name of the remote where you wish to push to, using github_deploy.
