@@ -16,15 +16,12 @@ install:
 - pip install 'Nikola[extras]'
 script:
 - nikola build 
-notifications:
-    email:
-        on_success: change
-        on_failure: always
 deploy:
     provider: pages
     skip-cleanup: true
     github-token: $GITHUB_TOKEN
     keep-history: true
     local-dir: output
+    target-branch: master
     on:
         branch: master
