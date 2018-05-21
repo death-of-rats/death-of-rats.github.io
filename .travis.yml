@@ -1,7 +1,8 @@
-# Travis CI config for automated Nikola blog deployments
+
 language: python
 cache: apt
 sudo: false
+github-token: $GITHUB_TOKEN
 addons:
   apt:
     packages:
