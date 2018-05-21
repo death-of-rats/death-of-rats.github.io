@@ -25,4 +25,4 @@ deploy:
     verbose: true
     repo: death-of-rats/death-of-rats.github.io
     on:
-        branch: master
+        branch: source
