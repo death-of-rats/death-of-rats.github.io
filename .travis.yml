@@ -8,6 +8,9 @@ addons:
     - language-pack-en-base
 python:
 - 3.6
+branches:
+  except:
+  - master
 install:
 - pip install 'Nikola[extras]'
 script:
