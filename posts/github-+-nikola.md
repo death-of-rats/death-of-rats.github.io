@@ -9,9 +9,9 @@
 .. type: text
 -->
 
-How to start GitHub repo for hosting pages with Nikola. I want a branch (let us name it `source`) where I will keep my project. I plan to generate static files to some folder and push it to the `master` branch. In other words `master` branch will have my site and `source` branch will have the whole Nikola engine with my source files.
+How to start GitHub repo for hosting pages with Nikola. I want a branch (let us name it `source`) where I will keep my project. I plan to generate static files to some folder and push it to the `master` branch. In other words, `master` branch will have my site and `source` branch will have the whole Nikola engine with my source files.
 
-I need to create new repo: *<username>.github.io* on GitHub page. Next I will clone it to the local folder, make my branch and push it.
+I need to create new repo: *<username>.github.io* on GitHub page. Next, I will clone it to the local folder, make my branch and push it.
 
 ```sh
 git clone git@github.com:death-of-rats/death-of-rats.github.io.git
@@ -22,9 +22,9 @@ git checkout source
 git push --set-upstream origin source
 ```
 
-And I have empty repo with 2 branches.
+And I have the empty repo with 2 branches.
 
-Now I init the Nikola project in repo root folder (on branch `source`). Nikola will produce html files to the `output` folder so I need, after first test run, split subtree for that folder and push it to `master`:
+Now I init the Nikola project in repo root folder (on branch `source`). Nikola will produce html files to the `output` folder so I need, after the first test run, split subtree for that folder and push it to `master`:
 
 ```sh
 git push origin `git subtree split --prefix output/ master`:master --force
