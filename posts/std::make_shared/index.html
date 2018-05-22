@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="welcome post">
@@ -8,9 +8,13 @@
 <link href="../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
 <meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="en" href="../../rss.xml">
 <link rel="canonical" href="https://death-of-rats.github.io/posts/std%3A%3Amake_shared/">
-<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="author" content="death-of-rats">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><link href="../../assets/css/ipython.min.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/nikola_ipython.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="assets/css/typeplate.css">
+<link rel="stylesheet" media="screen" href="http://openfontlibrary.org/face/railway-sans" type="text/css">
+<meta name="author" content="death-of-rats">
 <link rel="next" href="../github-%2B-nikola/" title="0x01 github + nikola" type="text/html">
 <meta property="og:site_name" content="Death Of Rats">
 <meta property="og:title" content="0x00 std::make_shared">
@@ -21,27 +25,20 @@
 <meta property="article:tag" content="nothing">
 </head>
 <body>
-<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
-
 <!-- Menubar -->
 
-<nav class="navbar navbar-inverse navbar-static-top"><div class="container">
-<!-- This keeps the margins nice -->
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="https://death-of-rats.github.io/">
-
-                <span id="blog-title">Death Of Rats</span>
-            </a>
-        </div>
-<!-- /.navbar-header -->
-        <div class="collapse navbar-collapse" id="bs-navbar" role="navigation" aria-expanded="false">
-            <ul class="nav navbar-nav">
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation"><div class="container">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://death-of-rats.github.io/">Death Of Rats</a>
+    </div>
+    <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
 <li>
 <a href="../../archive.html">Archive</a>
                 </li>
@@ -51,26 +48,22 @@
 <li>
 <a href="../../rss.xml">RSS feed</a>
 
-                
-            </li>
+        </li>
 </ul>
 <ul class="nav navbar-nav navbar-right">
-<li>
+<!--Add Links to social media sites --><!-- pass --><li>
     <a href="../std%3A%3Amake_shared/index.md" id="sourcelink">Source</a>
     </li>
 
-                
-            </ul>
+        </ul>
 </div>
 <!-- /.navbar-collapse -->
     </div>
-<!-- /.container -->
-</nav><!-- End of Menubar --><div class="container" id="content" role="main">
-    <div class="body-content">
-        <!--Body content-->
-        <div class="row">
-            
-            
+</nav><!-- End of Menubar --><div class="container">
+  <!--Body content-->
+  <div class="row">
+      
+      
 <article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="../std%3A%3Amake_shared/" class="u-url">0x00 std::make_shared</a></h1>
 
         <div class="metadata">
@@ -105,20 +98,40 @@
             </li>
         </ul></nav></aside></article>
 </div>
-        <!--End of body content-->
 
-        <footer id="footer">
-            Contents © 2018         death-of-rats - powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         
+  <div class="footerbox">
+    Contents © 2018         death-of-rats - powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         
 <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons Licence" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png"></a><br>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
-            
-        </footer>
-</div>
+    
+  </div>
+<!--End of body content-->
 </div>
 
-
-            <script src="../../assets/js/all-nocdn.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
-    moment.locale("en");
-    fancydates(0, "YYYY-MM-DD HH:mm");
-    </script><!-- end fancy dates -->
+            <script src="../../assets/js/all-nocdn.js"></script><!-- Add Jumbotron scroll js --><script type="text/javascript">//<![CDATA[
+$(window).load(function(){
+  $(window).scroll(function() {
+    var scrolledY = $(window).scrollTop();
+    $('.jumbotron').css('background-position', 'left ' + ((scrolledY)) + 'px');
+  });
+});//]]>
+</script><script>jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
+moment.locale("en");
+fancydates(0, "YYYY-MM-DD HH:mm");
+</script><!-- end fancy dates --><!-- Abstract hide/show 
+<script src"/assets/js/div_toggle.js"></script>
+--><script type="text/javascript">
+function toggle(showHideDiv, switchTextDiv) {
+    var ele = document.getElementById(showHideDiv);
+    var text = document.getElementById(switchTextDiv);
+    if(ele.style.display == "none") {
+        ele.style.display = "block";
+        text.innerHTML = "[hide abstract]";
+    }
+    else {
+            ele.style.display = "none";
+            text.innerHTML = "[show abstract]";
+    }
+}
+</script>
 </body>
 </html>
