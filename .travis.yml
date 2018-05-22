@@ -12,7 +12,7 @@ branches:
   except:
   - master
 install:
-- pip install 'Nikola[extras]'
+- pip install 'Nikola[extras]'==8.0.0.b2
 script:
 - nikola build 
 deploy:
