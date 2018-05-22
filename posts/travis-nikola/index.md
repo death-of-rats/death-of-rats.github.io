@@ -9,4 +9,12 @@
 .. type: text
 -->
 
+// start with description of idea
 
+// set up travis account - minimal description, mostly take your time with token generation.
+
+// create .travis.yml
+// python lang + nikola start and build
+// deploy to GitHubPages and what repo/branch should be placed where! <- very important as it may be confused
+
+// ...**PIP**!
