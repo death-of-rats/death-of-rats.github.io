@@ -92,8 +92,8 @@
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
     <div>
-<p>How to start GitHub repo for hosting pages with Nikola. I want a branch (let us name it <code>source</code>) where I will keep my project. I plan to generate static files to some folder and push it to the <code>master</code> branch. In other words <code>master</code> branch will have my site and <code>source</code> branch will have the whole Nikola engine with my source files.</p>
-<p>I need to create new repo: <em><username>.github.io</username></em> on GitHub page. Next I will clone it to the local folder, make my branch and push it.</p>
+<p>How to start GitHub repo for hosting pages with Nikola. I want a branch (let us name it <code>source</code>) where I will keep my project. I plan to generate static files to some folder and push it to the <code>master</code> branch. In other words, <code>master</code> branch will have my site and <code>source</code> branch will have the whole Nikola engine with my source files.</p>
+<p>I need to create new repo: <em><username>.github.io</username></em> on GitHub page. Next, I will clone it to the local folder, make my branch and push it.</p>
 <pre class="code literal-block"><span></span>git clone git@github.com:death-of-rats/death-of-rats.github.io.git
 <span class="nb">cd</span> death-of-rats.github.io.git
 git commit --allow-empty -am <span class="s2">"start using repo"</span>
@@ -103,8 +103,8 @@ git push --set-upstream origin <span class="nb">source</span>
 </pre>
 
 
-<p>And I have empty repo with 2 branches.</p>
-<p>Now I init the Nikola project in repo root folder (on branch <code>source</code>). Nikola will produce html files to the <code>output</code> folder so I need, after first test run, split subtree for that folder and push it to <code>master</code>:</p>
+<p>And I have the empty repo with 2 branches.</p>
+<p>Now I init the Nikola project in repo root folder (on branch <code>source</code>). Nikola will produce html files to the <code>output</code> folder so I need, after the first test run, split subtree for that folder and push it to <code>master</code>:</p>
 <pre class="code literal-block"><span></span>git push origin <span class="sb">`</span>git subtree split --prefix output/ master<span class="sb">`</span>:master --force
 </pre>
 

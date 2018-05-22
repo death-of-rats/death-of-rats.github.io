@@ -91,12 +91,53 @@
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
     <div>
-<p>// start with description of idea</p>
-<p>// set up travis account - minimal description, mostly take your time with token generation.</p>
-<p>// create .travis.yml
-// python lang + nikola start and build
-// deploy to GitHubPages and what repo/branch should be placed where! &lt;- very important as it may be confused</p>
-<p>// ...<strong>PIP</strong>!</p>
+<p>One has running Nikola. One stores all his work on GitHub and hosts it on GitHub Pages. Nice. But... come on, there allways must be the <em>but</em>. But do I really need to push my changes to the repo, and when I'm to ready build static pages and push them to master. And what if I'm not at my computer, what if I must change some typo. It would be nice if something could do this build and deploy stuff for me.</p>
+<p>That is why I invite...</p>
+<!-- TEASER_END -->
+
+<h3>Travis CI</h3>
+<p>What one needs to proceed? Travis account connected to GitHub. Choose repository with your site and change some settings. I checked <em>Build only if .travis.yml is present</em>, <em>Build pushed branches</em> and <em>Build pushed pull requests</em>. </p>
+<p>As 'checkbox' says Travis will build only if <em>.travis.yml</em> is present. So add it to repo! Travis should do 2 things: build static files and deploy them to master. The first part should look like:</p>
+<pre class="code literal-block"><span></span><span class="n">language</span><span class="o">:</span> <span class="n">python</span>
+<span class="n">cache</span><span class="o">:</span> <span class="n">apt</span>
+<span class="n">sudo</span><span class="o">:</span> <span class="kc">false</span>
+<span class="n">addons</span><span class="o">:</span>
+  <span class="n">apt</span><span class="o">:</span>
+    <span class="n">packages</span><span class="o">:</span>
+    <span class="o">-</span> <span class="n">language</span><span class="o">-</span><span class="n">pack</span><span class="o">-</span><span class="n">en</span><span class="o">-</span><span class="n">base</span>
+<span class="n">python</span><span class="o">:</span>
+<span class="o">-</span> <span class="mf">3.6</span><span class="o">.</span><span class="mi">5</span>
+<span class="n">branches</span><span class="o">:</span>
+  <span class="n">except</span><span class="o">:</span>
+  <span class="o">-</span> <span class="n">master</span>
+<span class="n">install</span><span class="o">:</span>
+<span class="o">-</span> <span class="n">pip</span> <span class="n">install</span> <span class="s1">'Nikola[extras]'</span><span class="o">==</span><span class="mf">8.0</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="na">b2</span>
+<span class="n">script</span><span class="o">:</span>
+<span class="o">-</span> <span class="n">nikola</span> <span class="n">build</span> 
+</pre>
+
+
+<p>First 9 lines - Nikola is written in python, it is why we need it in version 3. I want to use version 3.6. Travis should ignore any changes on master branch (he will do them himself after all), that's reason for excepting branch master. First, we have to install Nikola by using pip. I forced this version for its building theme. Without version <strong>pip</strong> installed version 7 of Nikola. After all this 'work' there is time for build script: <code>nikola build</code>.</p>
+<p>Ok, so now we have our site build. How to deploy it on GitHubPages? One could play with <code>nikola deploy</code> or a few <code>git</code> commands, but... yes, but... Travis has to deploy provider for that:</p>
+<pre class="code literal-block"><span></span><span class="n">deploy</span><span class="o">:</span>
+    <span class="n">provider</span><span class="o">:</span> <span class="n">pages</span>
+    <span class="n">skip</span><span class="o">-</span><span class="n">cleanup</span><span class="o">:</span> <span class="kc">true</span>
+    <span class="n">keep</span><span class="o">-</span><span class="n">history</span><span class="o">:</span> <span class="kc">true</span>
+    <span class="n">github</span><span class="o">-</span><span class="n">token</span><span class="o">:</span> <span class="n">$GITHUB_TOKEN</span>
+    <span class="n">local</span><span class="o">-</span><span class="n">dir</span><span class="o">:</span> <span class="n">output</span>
+    <span class="n">target</span><span class="o">-</span><span class="n">branch</span><span class="o">:</span> <span class="n">master</span>
+    <span class="n">verbose</span><span class="o">:</span> <span class="kc">true</span>
+    <span class="n">repo</span><span class="o">:</span> <span class="n">death</span><span class="o">-</span><span class="n">of</span><span class="o">-</span><span class="n">rats</span><span class="o">/</span><span class="n">death</span><span class="o">-</span><span class="n">of</span><span class="o">-</span><span class="n">rats</span><span class="o">.</span><span class="na">github</span><span class="o">.</span><span class="na">io</span>
+    <span class="n">on</span><span class="o">:</span>
+        <span class="n">branch</span><span class="o">:</span> <span class="n">source</span>
+</pre>
+
+
+<p>More information could be found at <a href="https://docs.travis-ci.com/user/deployment/pages/">TCI01</a>. I added <code>local-dir</code> to set what should be deployed and where (<code>repo</code> and <code>target-branch: master</code>). This operation should take place on <em>source</em> branch.</p>
+<p>In GitHub <em>Settings &gt; Developer settings &gt; Personal access tokens</em> <code>Generate new token</code> for Travis. At <a href="https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/">GH01</a> you can read what to do. This token insert in Travis settings Environment Variables and use it by $VariableName. </p>
+<p>Ok, now is the time to push changes and watch how Travis is building and deploying <strong>Your</strong> site.</p>
+<p>Easy, I almost forget about that 4 hours of tries...</p>
+<p>...<strong>PIP</strong>!</p>
 </div>
     </div>
     <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
