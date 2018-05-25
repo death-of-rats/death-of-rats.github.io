@@ -1,4 +1,0 @@
-Sitemap: https://death-of-rats.github.io/sitemapindex.xml
-
-User-Agent: *
-Host: death-of-rats.github.io
