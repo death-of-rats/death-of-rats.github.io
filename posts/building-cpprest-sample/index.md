@@ -1,7 +1,7 @@
 <!--
 .. title: 0x03 building cpprest sample
 .. slug: building-cpprest-sample
-.. date: 2018-05-28 00:00:00 UTC
+.. date: 2018-05-27 22:00:00 UTC
 .. tags: cpp,rest,cmake
 .. category: cmake
 .. link: 
