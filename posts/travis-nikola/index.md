@@ -19,7 +19,7 @@ That is why I invite...
 
 What one needs to proceed? Travis account connected to GitHub. Choose repository with your site and change some settings. I checked *Build only if .travis.yml is present*, *Build pushed branches* and *Build pushed pull requests*. 
 
-As 'checkbox' says Travis will build only if *.travis.yml* is present. So add it to repo! Travis should do 2 things: build static files and deploy them to master. The first part should look like:
+As 'checkbox' says Travis will build only if *.travis.yml* is present. So add it to the repo! Travis should do 2 things: build static files and deploy them to master. The first part should look like:
 
 ```yml
 language: python
@@ -40,9 +40,14 @@ script:
 - nikola build 
 ```
 
-First 9 lines - Nikola is written in python, it is why we need it in version 3. I want to use version 3.6. Travis should ignore any changes on master branch (he will do them himself after all), that's reason for excepting branch master. First, we have to install Nikola by using pip. I forced this version for its building theme. Without version **pip** installed version 7 of Nikola. After all this 'work' there is time for build script: `nikola build`.
+First 9 lines: Nikola is written in python, it is why we need it in, at least, version 3. 
+Travis should ignore any changes on master branch (he will do them himself after all), that's the 
+reason for excepting branch master. First, we have to install Nikola using pip. I forced 
+version 8.0.0.b2 for its build-in theme. By default **pip** installs version 7 of Nikola. After all 
+this 'work' there is time for build script: `nikola build`.
 
-Ok, so now we have our site build. How to deploy it on GitHubPages? One could play with `nikola deploy` or a few `git` commands, but... yes, but... Travis has to deploy provider for that:
+Ok, so now we have our site build. How deploy it on GitHub Pages? One could play with `nikola deploy` 
+or a few `git` commands, but Travis has a deploy provider for that:
 
 ```yml
 deploy:
@@ -58,9 +63,14 @@ deploy:
 		branch: source
 ```
 
-More information could be found at [TCI01](https://docs.travis-ci.com/user/deployment/pages/). I added `local-dir` to set what should be deployed and where (`repo` and `target-branch: master`). This operation should take place on *source* branch.
+More information could be found at [TCI01](https://docs.travis-ci.com/user/deployment/pages/). 
+I added `local-dir` to set what should be deployed and where (`repo` and `target-branch: master`). 
+This operation should take place on *source* branch.
 
-In GitHub *Settings > Developer settings > Personal access tokens* `Generate new token` for Travis. At [GH01](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/) you can read what to do. This token insert in Travis settings Environment Variables and use it by $VariableName. 
+In GitHub *Settings > Developer settings > Personal access tokens* `Generate new token` for Travis. 
+At [GH01](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/) 
+you can read what to do. This token insert in Travis settings Environment Variables and use it by 
+*$VariableName*. 
 
 Ok, now is the time to push changes and watch how Travis is building and deploying **Your** site.
 
