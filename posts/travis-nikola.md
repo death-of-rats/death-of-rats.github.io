@@ -9,7 +9,10 @@
 .. type: text
 -->
 
-One has running Nikola. One stores all his work on GitHub and hosts it on GitHub Pages. Nice. But... come on, there allways must be the *but*. But do I really need to push my changes to the repo, and when I'm to ready build static pages and push them to master. And what if I'm not at my computer, what if I must change some typo. It would be nice if something could do this build and deploy stuff for me.
+One has running Nikola. One stores all ones work on GitHub and hosts it on the GitHub Pages. Nice. But 
+do I really need to push my changes to the repo, and when I'm ready, build static pages and push them 
+to the `master`. And what if I'm not at my computer, what if I must change some typo. It would be 
+nice if something could do this build and deploy the stuff for me.
 
 That is why I invite...
 
@@ -17,9 +20,12 @@ That is why I invite...
 
 ## Travis CI
 
-What one needs to proceed? Travis account connected to GitHub. Choose repository with your site and change some settings. I checked *Build only if .travis.yml is present*, *Build pushed branches* and *Build pushed pull requests*. 
+What one needs to have to proceed? Travis account connected to the GitHub account. Choose repository 
+with your site and change some settings. I checked *Build only if .travis.yml is present*, *Build 
+pushed branches* and *Build pushed pull requests*. 
 
-As 'checkbox' says Travis will build only if *.travis.yml* is present. So add it to the repo! Travis should do 2 things: build static files and deploy them to master. The first part should look like:
+As the 'checkbox' says Travis will build only if *.travis.yml* is present. So add it to the repo! 
+Travis should do 2 things: build static files and deploy them to master. The first part should look like:
 
 ```yml
 language: python
@@ -43,7 +49,7 @@ script:
 First 9 lines: Nikola is written in python, it is why we need it in, at least, version 3. 
 Travis should ignore any changes on master branch (he will do them himself after all), that's the 
 reason for excepting branch master. First, we have to install Nikola using pip. I forced 
-version 8.0.0.b2 for its build-in theme. By default **pip** installs version 7 of Nikola. After all 
+version 8.0.0.b2 for its built-in theme. By default, **pip** installs version 7 of Nikola. After all 
 this 'work' there is time for build script: `nikola build`.
 
 Ok, so now we have our site build. How deploy it on GitHub Pages? One could play with `nikola deploy` 
