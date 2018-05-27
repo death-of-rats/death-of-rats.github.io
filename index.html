@@ -11,7 +11,7 @@
 <meta name="generator" content="Nikola (getnikola.com)">
 <link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
 <link rel="canonical" href="https://death-of-rats.github.io/">
-<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/travis-nikola/" type="text/html">
+<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/building-cpprest-sample/" type="text/html">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -67,7 +67,154 @@
     
         
     <div class="postindex">
-            <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/travis-nikola/" class="u-url">0x02 travis + nikola</a></h1>
+            <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/building-cpprest-sample/" class="u-url">0x03 building cpprest sample</a></h1>
+                <div class="metadata">
+                    <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                        death-of-rats
+                    </span></p>
+                    <p class="dateline"><a href="posts/building-cpprest-sample/" rel="bookmark"><time class="published dt-published" datetime="2018-05-27T22:00:00Z" title="2018-05-27 22:00">2018-05-27 22:00</time></a></p>
+                </div>
+            </header><div class="e-content entry-content">
+                    <div>
+<p>One can install the <a href="https://github.com/Microsoft/cpprestsdk">C++ REST SDK</a> running 
+<code>sudo apt install libcpprest-dev</code>. Unfortunately after that my CMake couldn't find it. 
+I have some other troubles with building project with cpprest so I change my mind and 
+I've to build the library from source 
+(<a href="https://github.com/Microsoft/cpprestsdk/wiki/How-to-build-for-Linux">instructions</a>).</p>
+<p>To try new toy I've got this <a href="https://github.com/Microsoft/cpprestsdk/blob/master/Release/samples/BingRequest/bingrequest.cpp">sample</a>.
+<!-- TEASER_END -->
+For the test, I will rename source file to <code>main.cpp</code>. Let us create CMakeLists.txt. Readme of 
+the project gives us the example:</p>
+<pre class="code literal-block"><span></span>cmake_minimum_required<span class="o">(</span>VERSION <span class="m">3</span>.7<span class="o">)</span>
+project<span class="o">(</span>main<span class="o">)</span>
+
+find_package<span class="o">(</span>cpprestsdk REQUIRED<span class="o">)</span>
+
+add_executable<span class="o">(</span>main main.cpp<span class="o">)</span>
+target_link_libraries<span class="o">(</span>main PRIVATE cpprestsdk::cpprest<span class="o">)</span>
+</pre>
+
+
+<p>I know is the time of trial:</p>
+<pre class="code literal-block"><span></span>$ mkdir build
+$ <span class="nb">cd</span> build
+$ cmake ..
+</pre>
+
+
+<pre class="code literal-block"><span></span> -- The C compiler identification is GNU 7.3.0
+ -- The CXX compiler identification is GNU 7.3.0
+ -- Check for working C compiler: /usr/bin/cc
+ -- Check for working C compiler: /usr/bin/cc -- works
+ -- Detecting C compiler ABI info
+ -- Detecting C compiler ABI info - done
+ -- Detecting C compile features
+ -- Detecting C compile features - done
+ -- Check for working CXX compiler: /usr/bin/c++
+ -- Check for working CXX compiler: /usr/bin/c++ -- works
+ -- Detecting CXX compiler ABI info
+ -- Detecting CXX compiler ABI info - done
+ -- Detecting CXX compile features
+ -- Detecting CXX compile features - done
+ -- Found ZLIB: /usr/lib/x86_64-linux-gnu/libz.so (found version "1.2.11") 
+ -- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "1.1.0g") 
+ -- Configuring done
+ -- Generating done
+ -- Build files have been written to: ~/Projects/cpprest01/build
+</pre>
+
+
+<pre class="code literal-block"><span></span>$ make
+</pre>
+
+
+<pre class="code literal-block"><span></span> Scanning dependencies of target main
+ [ 50%] Building CXX object CMakeFiles/main.dir/main.cpp.o
+ [100%] Linking CXX executable main
+ /usr/bin/x86_64-linux-gnu-ld: CMakeFiles/main.dir/main.cpp.o: undefined reference to symbol '_ZN5boost6system15system_categoryEv'
+ //usr/lib/x86_64-linux-gnu/libboost_system.so.1.65.1: error adding symbols: DSO missing from command line
+ collect2: error: ld returned 1 exit status
+ CMakeFiles/main.dir/build.make:97: recipe for target 'main' failed
+ make[2]: \*\*\* [main] Error 1
+ CMakeFiles/Makefile2:67: recipe for target 'CMakeFiles/main.dir/all' failed
+ make[1]: \*\*\* [CMakeFiles/main.dir/all] Error 2
+ Makefile:83: recipe for target 'all' failed
+ make: \*\*\* [all] Error 2
+</pre>
+
+
+<h3>cmake for Microsoft/cpprestsdkr</h3>
+<p>Ok, so it doesn't work... surprise, surprise.</p>
+<p>Time to go back to instruction for building <strong>cpprest</strong> on Linux. There is <code>g++</code> instruction 
+at the end to build project with library:</p>
+<pre class="code literal-block"><span></span><span class="n">g</span><span class="o">++</span> <span class="o">-</span><span class="n">std</span><span class="o">=</span><span class="n">c</span><span class="o">++</span><span class="mi">11</span> <span class="n">my_file</span><span class="p">.</span><span class="n">cpp</span> <span class="o">-</span><span class="n">o</span> <span class="n">my_file</span> <span class="o">-</span><span class="n">lboost_system</span> <span class="o">-</span><span class="n">lcrypto</span> <span class="o">-</span><span class="n">lssl</span> <span class="o">-</span><span class="n">lcpprest</span> <span class="p">.</span><span class="o">/</span><span class="n">my_file</span>
+</pre>
+
+
+<p>And it works... So change our <code>CMakeLists.txt</code>. We want to use <em>Boost</em> and <em>OpenSSL</em> (this 
+library contains both <em>SSL</em> and <em>crypto</em>). Add this two libraries:</p>
+<pre class="code literal-block"><span></span>...
+find_package<span class="o">(</span>Boost REQUIRED COMPONENTS system<span class="o">)</span>
+find_package<span class="o">(</span>OpenSSL REQUIRED<span class="o">)</span>
+                                             <span class="c1"># show lib paths</span>
+message<span class="o">(</span><span class="s2">"OpenSSL: "</span> <span class="si">${</span><span class="nv">OPENSSL_LIBRARIES</span><span class="si">}</span><span class="o">)</span>    <span class="c1"># libs to be linked by OpenSSL</span>
+message<span class="o">(</span><span class="s2">"Boost: "</span> <span class="si">${</span><span class="nv">Boost_LIBRARIES</span><span class="si">}</span><span class="o">)</span>        <span class="c1"># linked components of Boosta</span>
+
+add_executable<span class="o">(</span>main main.cpp<span class="o">)</span>
+target_link_libraries<span class="o">(</span>main PRIVATE
+    cpprestsdk::cpprest
+    <span class="si">${</span><span class="nv">Boost_LIBRARIES</span><span class="si">}</span>
+    <span class="si">${</span><span class="nv">OPENSSL_LIBRARIES</span><span class="si">}</span><span class="o">)</span>
+</pre>
+
+
+<pre class="code literal-block"><span></span>$ cmake ..
+</pre>
+
+
+<pre class="code literal-block"><span></span> -- The C compiler identification is GNU 7.3.0
+ -- The CXX compiler identification is GNU 7.3.0
+ -- Check for working C compiler: /usr/bin/cc
+ -- Check for working C compiler: /usr/bin/cc -- works
+ -- Detecting C compiler ABI info
+ -- Detecting C compiler ABI info - done
+ -- Detecting C compile features
+ -- Detecting C compile features - done
+ -- Check for working CXX compiler: /usr/bin/c++
+ -- Check for working CXX compiler: /usr/bin/c++ -- works
+ -- Detecting CXX compiler ABI info
+ -- Detecting CXX compiler ABI info - done
+ -- Detecting CXX compile features
+ -- Detecting CXX compile features - done
+ -- Found ZLIB: /usr/lib/x86_64-linux-gnu/libz.so (found version "1.2.11") 
+ -- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "1.1.0g") 
+ -- Boost version: 1.65.1
+ -- Found the following Boost libraries:
+ --   system
+ OpenSSL: /usr/lib/x86_64-linux-gnu/libssl.so/usr/lib/x86_64-linux-gnu/libcrypto.so
+ Boost: /usr/lib/x86_64-linux-gnu/libboost_system.so
+ -- Configuring done
+ -- Generating done
+ -- Build files have been written to: ~/Projects/cpprest01/build
+</pre>
+
+
+<pre class="code literal-block"><span></span>$ make
+</pre>
+
+
+<pre class="code literal-block"><span></span> Scanning dependencies of target main
+ [ 50%] Building CXX object CMakeFiles/main.dir/main.cpp.o
+ [100%] Linking CXX executable main
+ [100%] Built target main
+</pre>
+
+
+<p>Done. One day in a hundred lines...</p>
+<p>...<strong>PIP</strong>!</p>
+</div>
+                </div>
+            </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/travis-nikola/" class="u-url">0x02 travis + nikola</a></h1>
                 <div class="metadata">
                     <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                         death-of-rats
