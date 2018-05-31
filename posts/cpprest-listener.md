@@ -72,7 +72,7 @@ int main() {
 ```
 
 To build this code I use CMake with configuration from last post 
-[[0x03 building cpprest sample](/posts/building-cpprest-sample/)]. 
+\[[0x03 building cpprest sample](/posts/building-cpprest-sample/)]. 
 
 ```
 cmake_minimum_required(VERSION 3.7)
@@ -112,3 +112,6 @@ $ curl --request POST --data '{"label":"value"}' -H "Content-Type: application/j
 ```
 {"label":"value"}
 ```
+
+What have I learned? If one is looking for examples, one should look up tests...
+... **PIP**!
