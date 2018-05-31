@@ -11,7 +11,7 @@
 <meta name="generator" content="Nikola (getnikola.com)">
 <link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
 <link rel="canonical" href="https://death-of-rats.github.io/">
-<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/building-cpprest-sample/" type="text/html">
+<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/cpprest-listener/" type="text/html">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -67,7 +67,129 @@
     
         
     <div class="postindex">
-            <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/building-cpprest-sample/" class="u-url">0x03 building cpprest sample</a></h1>
+            <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/cpprest-listener/" class="u-url">0x04 cpprest listener</a></h1>
+                <div class="metadata">
+                    <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                        death-of-rats
+                    </span></p>
+                    <p class="dateline"><a href="posts/cpprest-listener/" rel="bookmark"><time class="published dt-published" datetime="2018-06-01T00:00:00+02:00" title="2018-06-01 00:00">2018-06-01 00:00</time></a></p>
+                        <p class="commentline">
+        
+    <a href="posts/cpprest-listener/#disqus_thread" data-disqus-identifier="cache/posts/cpprest-listener.html">Comments</a>
+
+
+                </p>
+</div>
+            </header><div class="e-content entry-content">
+                    <div>
+<p>I want to try to build simple REST server demo with <em>cpprestsdk</em>. It is still experimental part of the library.</p>
+<p>Let's start the program. I want to listen on <em>localhost</em> on port 9000 with relative path <em>/demo</em>. For now, 
+the program will handle only <em>GET</em> and <em>POST</em>. When the listener starts, we get a notification. 
+<em>cpprestsdk</em> uses <code>pplx::task&lt;T&gt;</code> for composing asynchronous operations (<code>...then().then().wait()</code>). The main
+loop is very simple, we just <code>while</code> infinitely.</p>
+<pre class="code literal-block"><span></span><span class="cp">#include</span> <span class="cpf">&lt;cpprest/http_listener.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;cpprest/json.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">web</span><span class="p">;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">web</span><span class="o">::</span><span class="n">http</span><span class="p">;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">web</span><span class="o">::</span><span class="n">http</span><span class="o">::</span><span class="n">experimental</span><span class="o">::</span><span class="n">listener</span><span class="p">;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">handle_get</span><span class="p">(</span><span class="n">http_request</span> <span class="n">request</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">wcout</span> <span class="o">&lt;&lt;</span> <span class="sa">L</span><span class="s">"[HTTP] GET</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="n">json</span><span class="o">::</span><span class="n">value</span>  <span class="n">answer</span><span class="p">;</span>
+    <span class="n">answer</span><span class="p">[</span><span class="n">U</span><span class="p">(</span><span class="s">"version"</span><span class="p">)]</span> <span class="o">=</span> <span class="n">json</span><span class="o">::</span><span class="n">value</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">U</span><span class="p">(</span><span class="s">"0.0.1"</span><span class="p">));</span>
+    <span class="n">answer</span><span class="p">[</span><span class="n">U</span><span class="p">(</span><span class="s">"name"</span><span class="p">)]</span> <span class="o">=</span> <span class="n">json</span><span class="o">::</span><span class="n">value</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">U</span><span class="p">(</span><span class="s">"death of rats"</span><span class="p">));</span>
+    <span class="n">request</span><span class="p">.</span><span class="n">reply</span><span class="p">(</span><span class="n">status_codes</span><span class="o">::</span><span class="n">OK</span><span class="p">,</span> <span class="n">answer</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">handle_post</span><span class="p">(</span><span class="n">http_request</span> <span class="n">request</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">wcout</span> <span class="o">&lt;&lt;</span> <span class="sa">L</span><span class="s">"[HTTP] POST</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="n">request</span>
+        <span class="p">.</span><span class="n">extract_json</span><span class="p">()</span>
+        <span class="p">.</span><span class="n">then</span><span class="p">([</span><span class="o">&amp;</span><span class="n">request</span><span class="p">](</span><span class="n">json</span><span class="o">::</span><span class="n">value</span> <span class="n">val</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">val</span><span class="p">.</span><span class="n">is_null</span><span class="p">())</span> <span class="p">{</span>
+                <span class="n">request</span><span class="p">.</span><span class="n">reply</span><span class="p">(</span><span class="n">status_codes</span><span class="o">::</span><span class="n">BadRequest</span><span class="p">,</span> <span class="n">U</span><span class="p">(</span><span class="s">"No object in post data."</span><span class="p">));</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="n">request</span><span class="p">.</span><span class="n">reply</span><span class="p">(</span><span class="n">status_codes</span><span class="o">::</span><span class="n">OK</span><span class="p">,</span> <span class="n">val</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}).</span><span class="n">wait</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">http_listener</span> <span class="n">listener</span><span class="p">(</span><span class="n">uri</span><span class="p">(</span><span class="n">U</span><span class="p">(</span><span class="s">"http://localhost:9000/demo"</span><span class="p">)));</span>
+
+    <span class="n">listener</span><span class="p">.</span><span class="n">support</span><span class="p">(</span><span class="n">methods</span><span class="o">::</span><span class="n">GET</span><span class="p">,</span> <span class="n">handle_get</span><span class="p">);</span>
+    <span class="n">listener</span><span class="p">.</span><span class="n">support</span><span class="p">(</span><span class="n">methods</span><span class="o">::</span><span class="n">POST</span><span class="p">,</span> <span class="n">handle_post</span><span class="p">);</span>
+
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="n">listener</span>
+            <span class="p">.</span><span class="n">open</span><span class="p">()</span>
+            <span class="p">.</span><span class="n">then</span><span class="p">([</span><span class="o">&amp;</span><span class="n">listener</span><span class="p">](){</span>
+                <span class="n">wcout</span> <span class="o">&lt;&lt;</span> <span class="sa">L</span><span class="s">"starting to listen</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>        
+            <span class="p">})</span>
+            <span class="p">.</span><span class="n">wait</span><span class="p">();</span>
+
+        <span class="k">while</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="n">exception</span> <span class="k">const</span> <span class="o">&amp;</span><span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">wcout</span> <span class="o">&lt;&lt;</span> <span class="n">e</span><span class="p">.</span><span class="n">what</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>To build this code I use CMake with configuration from last post 
+[<a href="posts/building-cpprest-sample/">0x03 building cpprest sample</a>]. </p>
+<pre class="code literal-block"><span></span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span> <span class="s">3.7</span><span class="p">)</span>
+<span class="nb">project</span><span class="p">(</span><span class="s">simargl</span> <span class="s">C</span> <span class="s">CXX</span><span class="p">)</span>
+<span class="nb">set</span> <span class="p">(</span><span class="s">simargl_VERSION_MAJOR</span> <span class="s">0</span><span class="p">)</span>
+<span class="nb">set</span> <span class="p">(</span><span class="s">simargl_VERSION_MINOR</span> <span class="s">1</span><span class="p">)</span>
+<span class="nb">set</span> <span class="p">(</span><span class="s">CMAKE_CXX_STANDARD</span> <span class="s">14</span><span class="p">)</span>
+
+<span class="nb">set</span><span class="p">(</span> <span class="s">CMAKE_EXPORT_COMPILE_COMMANDS</span> <span class="s">ON</span> <span class="p">)</span>
+<span class="nb">find_package</span><span class="p">(</span><span class="s">cpprestsdk</span> <span class="s">REQUIRED</span> <span class="p">)</span>
+<span class="nb">find_package</span><span class="p">(</span><span class="s">Boost</span> <span class="s">REQUIRED</span> <span class="s">COMPONENTS</span> <span class="s">system</span><span class="p">)</span>
+<span class="nb">find_package</span><span class="p">(</span><span class="s">OpenSSL</span> <span class="s">REQUIRED</span><span class="p">)</span>
+
+<span class="nb">add_executable</span><span class="p">(</span><span class="s">simargl</span> <span class="s">src/main.cpp</span><span class="p">)</span>
+<span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">simargl</span> <span class="s">PRIVATE</span>
+    <span class="s">cpprestsdk::cpprest</span>
+    <span class="o">${</span><span class="nv">Boost_LIBRARIES</span><span class="o">}</span> 
+    <span class="o">${</span><span class="nv">OPENSSL_LIBRARIES</span><span class="o">}</span>
+    <span class="p">)</span>
+
+<span class="c">#message("OpenSSL libs:" ${OPENSSL_LIBRARIES})</span>
+<span class="c">#message("Boost libs :" ${Boost_LIBRARIES})</span>
+<span class="c">#message("CppRest libs :" ${cpprestsdk_LIBRARIES})</span>
+</pre>
+
+
+<p>The build goes flawlessly. To test the cpprest listener run the program and try a few curl commands:</p>
+<pre class="code literal-block"><span></span>$ curl http://localhost:9000/demo
+</pre>
+
+
+<pre class="code literal-block"><span></span>{"name":"death of rats","version":"0.0.1"}
+</pre>
+
+
+<pre class="code literal-block"><span></span>$ curl --request POST --data <span class="s1">'{"label":"value"}'</span> -H <span class="s2">"Content-Type: application/json"</span>  http://localhost:9000/demo
+</pre>
+
+
+<pre class="code literal-block"><span></span>{"label":"value"}
+</pre>
+
+
+<p>What have I learned? If one is looking for examples, one should look up tests...
+... <strong>PIP</strong>!</p>
+</div>
+                </div>
+            </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/building-cpprest-sample/" class="u-url">0x03 building cpprest sample</a></h1>
                 <div class="metadata">
                     <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                         death-of-rats
