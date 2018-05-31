@@ -87,8 +87,14 @@
                     death-of-rats
             </span></p>
             <p class="dateline"><a href="." rel="bookmark"><time class="published dt-published" datetime="2018-06-01T00:00:00+02:00" itemprop="datePublished" title="2018-06-01 00:00">2018-06-01 00:00</time></a></p>
+                <p class="commentline">
+        
+    <a href="#disqus_thread" data-disqus-identifier="cache/posts/cpprest-listener.html">Comments</a>
+
+
             
-        <p class="sourceline"><a href="index.md" class="sourcelink">Source</a></p>
+        </p>
+<p class="sourceline"><a href="index.md" class="sourcelink">Source</a></p>
 
         </div>
         
@@ -97,7 +103,7 @@
     <div>
 <p>I want to try to build simple REST server demo with <em>cpprestsdk</em>. It is still experimental part of the library.</p>
 <p>Let's start the program. I want to listen on <em>localhost</em> on port 9000 with relative path <em>/demo</em>. For now, 
-the program will handle only <em>GET</em> and <em>POST</em>. When the listener is open we will receive a message. 
+the program will handle only <em>GET</em> and <em>POST</em>. When the listener starts, we get a notification. 
 <em>cpprestsdk</em> uses <code>pplx::task&lt;T&gt;</code> for composing asynchronous operations (<code>...then().then().wait()</code>). The main
 loop is very simple, we just <code>while</code> infinitely.</p>
 <pre class="code literal-block"><span></span><span class="cp">#include</span> <span class="cpf">&lt;cpprest/http_listener.h&gt;</span><span class="cp"></span>
@@ -204,7 +210,29 @@ loop is very simple, we just <code>while</code> infinitely.</p>
             <li><a class="tag p-category" href="../../categories/http/" rel="tag">http</a></li>
             <li><a class="tag p-category" href="../../categories/rest/" rel="tag">rest</a></li>
             <li><a class="tag p-category" href="../../categories/server/" rel="tag">server</a></li>
-        </ul></nav></aside></article><!--End of body content--><footer id="footer">
+        </ul></nav></aside><section class="comments hidden-print"><h2>Comments</h2>
+        
+        
+        <div id="disqus_thread"></div>
+        <script>
+        var disqus_shortname ="death-of-rats",
+            disqus_url="https://death-of-rats.github.io/posts/cpprest-listener/",
+        disqus_title="0x04 cpprest listener",
+        disqus_identifier="cache/posts/cpprest-listener.html",
+        disqus_config = function () {
+            this.language = "en";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.async = true;
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+    <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section></article><script>var disqus_shortname="death-of-rats";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><!--End of body content--><footer id="footer">
             Contents © 2018         death-of-rats - powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         
 <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons Licence" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png"></a><br>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>. <br><img src="https://travis-ci.org/death-of-rats/death-of-rats.github.io.svg?branch=source"></footer>
 </div>

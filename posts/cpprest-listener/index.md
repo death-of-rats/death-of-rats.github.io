@@ -12,7 +12,7 @@
 I want to try to build simple REST server demo with *cpprestsdk*. It is still experimental part of the library.
 
 Let's start the program. I want to listen on *localhost* on port 9000 with relative path */demo*. For now, 
-the program will handle only *GET* and *POST*. When the listener is open we will receive a message. 
+the program will handle only *GET* and *POST*. When the listener starts, we get a notification. 
 *cpprestsdk* uses `pplx::task<T>` for composing asynchronous operations (`...then().then().wait()`). The main
 loop is very simple, we just `while` infinitely.
 
