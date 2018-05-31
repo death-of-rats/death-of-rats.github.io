@@ -11,13 +11,13 @@
 
 One can install the [C++ REST SDK](https://github.com/Microsoft/cpprestsdk) running 
 `sudo apt install libcpprest-dev`. Unfortunately after that my CMake couldn't find it. 
-I have some other troubles with building project with cpprest so I change my mind and 
-I've to build the library from source 
+I have some other troubles with compiling a project with cpprest. So I change my mind and 
+I built the library from the source 
 ([instructions](https://github.com/Microsoft/cpprestsdk/wiki/How-to-build-for-Linux)).
 
-To try new toy I've got this [sample](https://github.com/Microsoft/cpprestsdk/blob/master/Release/samples/BingRequest/bingrequest.cpp).
+To try the new toy I choose this [sample](https://github.com/Microsoft/cpprestsdk/blob/master/Release/samples/BingRequest/bingrequest.cpp).
 <!-- TEASER_END -->
-For the test, I will rename source file to `main.cpp`. Let us create CMakeLists.txt. Readme of 
+For the test, I will rename the source file to `main.cpp`. Let us create CMakeLists.txt. The readme of 
 the project gives us the example:
 ```sh
 cmake_minimum_required(VERSION 3.7)
@@ -29,7 +29,7 @@ add_executable(main main.cpp)
 target_link_libraries(main PRIVATE cpprestsdk::cpprest)
 ```
 
-I know is the time of trial:
+I know this is the time of trial:
 ```sh
 $ mkdir build
 $ cd build
@@ -78,19 +78,19 @@ $ make
 ```
 
 
-## cmake for Microsoft/cpprestsdkr
+## cmake for Microsoft/cpprestsdk
 
 Ok, so it doesn't work... surprise, surprise.
 
-Time to go back to instruction for building **cpprest** on Linux. There is `g++` instruction 
-at the end to build project with library:
+Time to go back to instructions for building **cpprest** on Linux. There is `g++` instruction 
+at the end of the page. It builds the project with our library:
 
 ```cpp
 g++ -std=c++11 my_file.cpp -o my_file -lboost_system -lcrypto -lssl -lcpprest ./my_file
 ```
 
 And it works... So change our `CMakeLists.txt`. We want to use *Boost* and *OpenSSL* (this 
-library contains both *SSL* and *crypto*). Add this two libraries:
+library contains both *SSL* and *crypto*). Add this two libraries to cmake configuration:
 
 ```sh
 ...

@@ -96,12 +96,12 @@
     <div>
 <p>One can install the <a href="https://github.com/Microsoft/cpprestsdk">C++ REST SDK</a> running 
 <code>sudo apt install libcpprest-dev</code>. Unfortunately after that my CMake couldn't find it. 
-I have some other troubles with building project with cpprest so I change my mind and 
-I've to build the library from source 
+I have some other troubles with compiling a project with cpprest. So I change my mind and 
+I built the library from the source 
 (<a href="https://github.com/Microsoft/cpprestsdk/wiki/How-to-build-for-Linux">instructions</a>).</p>
-<p>To try new toy I've got this <a href="https://github.com/Microsoft/cpprestsdk/blob/master/Release/samples/BingRequest/bingrequest.cpp">sample</a>.
+<p>To try the new toy I choose this <a href="https://github.com/Microsoft/cpprestsdk/blob/master/Release/samples/BingRequest/bingrequest.cpp">sample</a>.
 <!-- TEASER_END -->
-For the test, I will rename source file to <code>main.cpp</code>. Let us create CMakeLists.txt. Readme of 
+For the test, I will rename the source file to <code>main.cpp</code>. Let us create CMakeLists.txt. The readme of 
 the project gives us the example:</p>
 <pre class="code literal-block"><span></span>cmake_minimum_required<span class="o">(</span>VERSION <span class="m">3</span>.7<span class="o">)</span>
 project<span class="o">(</span>main<span class="o">)</span>
@@ -113,7 +113,7 @@ target_link_libraries<span class="o">(</span>main PRIVATE cpprestsdk::cpprest<sp
 </pre>
 
 
-<p>I know is the time of trial:</p>
+<p>I know this is the time of trial:</p>
 <pre class="code literal-block"><span></span>$ mkdir build
 $ <span class="nb">cd</span> build
 $ cmake ..
@@ -161,16 +161,16 @@ $ cmake ..
 </pre>
 
 
-<h3>cmake for Microsoft/cpprestsdkr</h3>
+<h3>cmake for Microsoft/cpprestsdk</h3>
 <p>Ok, so it doesn't work... surprise, surprise.</p>
-<p>Time to go back to instruction for building <strong>cpprest</strong> on Linux. There is <code>g++</code> instruction 
-at the end to build project with library:</p>
+<p>Time to go back to instructions for building <strong>cpprest</strong> on Linux. There is <code>g++</code> instruction 
+at the end of the page. It builds the project with our library:</p>
 <pre class="code literal-block"><span></span><span class="n">g</span><span class="o">++</span> <span class="o">-</span><span class="n">std</span><span class="o">=</span><span class="n">c</span><span class="o">++</span><span class="mi">11</span> <span class="n">my_file</span><span class="p">.</span><span class="n">cpp</span> <span class="o">-</span><span class="n">o</span> <span class="n">my_file</span> <span class="o">-</span><span class="n">lboost_system</span> <span class="o">-</span><span class="n">lcrypto</span> <span class="o">-</span><span class="n">lssl</span> <span class="o">-</span><span class="n">lcpprest</span> <span class="p">.</span><span class="o">/</span><span class="n">my_file</span>
 </pre>
 
 
 <p>And it works... So change our <code>CMakeLists.txt</code>. We want to use <em>Boost</em> and <em>OpenSSL</em> (this 
-library contains both <em>SSL</em> and <em>crypto</em>). Add this two libraries:</p>
+library contains both <em>SSL</em> and <em>crypto</em>). Add this two libraries to cmake configuration:</p>
 <pre class="code literal-block"><span></span>...
 find_package<span class="o">(</span>Boost REQUIRED COMPONENTS system<span class="o">)</span>
 find_package<span class="o">(</span>OpenSSL REQUIRED<span class="o">)</span>
