@@ -9,7 +9,7 @@
 .. type: text
 -->
 
-Third challenge is a reverse engineering problem. Ziped package contains 3 files:
+The third challenge is a reverse engineering problem. The zipped package contains 3 files:
 
 ```sh
 crackme_baby
@@ -149,8 +149,8 @@ and also our longs:
 ````
 
 We will need this to find out what calculations take place in `calc_flag__object___object`. 
-I will replace *local_xxh* with known or choosen names.
-This way the graph below should be easer to underestand.
+I will replace *local_xxh* with known or chosen names.
+This way the graph below should be easier to understand.
 
 ```
                                                         ...
@@ -232,21 +232,21 @@ This way the graph below should be easer to underestand.
      `---------------------------------------------------------' 
 ```
 
-Calling python functions convention is to put adress of imported function to `rdi` register,
-adress of python object with first argument to `rsi` and second to `rdx`. Then there is a call to
- `sym.call__object___object___object`, result will be also python object which adress will be in `rax` register.
+Calling python functions convention is to put the address of an imported function to `rdi` register and
+the address of python object with the first argument to `rsi`, `rdx` will have the second argument address. Then there is a call to
+ `sym.call__object___object___object`, the result will be also python object which address will be in `rax` register.
 
-Algorithm shown above could be describe like this:
+The algorithm shown above could be described like this:
 
  1. Set `factor = 2` and `last_factor = 2`.
- 2. Next we check if `d1` is greater than `1`. If not `return d2 - last_factor`.
+ 2. Next, we check if `d1` is greater than `1`. If not `return d2 - last_factor`.
  3. Test if `factor` divides `d1` with no rest. If *True* then go to *step 4*  else *step 5*.
- 4. `d1 = d1 / factor` and save value of `factor` in `last_factor` and go to *step 2*. 
+ 4. `d1 = d1 / factor` and save the value of `factor` in `last_factor` and go to *step 2*. 
  5. `factor += 1` and go to *step 2*.
 
-In other words when condition `d1 > 1` will not be fullfilled `last_factor` will holds the greatest
- prime factor of `d1`. And this value will be substracted from `d2` and the result will be returned
- from function. As you might already suspect running this program will gives us nothing.
+In other words, when condition `d1 > 1` will not be fulfilled `last_factor` will hold the greatest
+ prime factor of `d1`. And this value will be subtracted from `d2` and the result will be returned
+ from the function. As you might already suspect running this program will give us nothing.
  So we better write our faster version of it.
 
 To get the greatest prime factor of `d1` I will use **[primefac](https://pypi.org/project/primefac/)**  python library.
