@@ -114,4 +114,5 @@ $ curl --request POST --data '{"label":"value"}' -H "Content-Type: application/j
 ```
 
 What have I learned? If one is looking for examples, one should look up tests...
-... **PIP**!
+
+...**SQUEAK**!

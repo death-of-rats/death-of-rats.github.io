@@ -82,4 +82,4 @@ Ok, now is the time to push changes and watch how Travis is building and deployi
 
 Easy, I almost forget about that 4 hours of tries...
 
-...**PIP**!
+...**SQUEAK**!

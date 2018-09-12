@@ -152,4 +152,4 @@ $ make
 
 Done. One day in a hundred lines...
 
-...**PIP**!
+...**SQUEAK**!
