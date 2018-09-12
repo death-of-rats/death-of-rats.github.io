@@ -347,15 +347,11 @@ the address of python object with the first argument to <code>rsi</code>, <code>
 <span class="n">flag</span> <span class="o">=</span> <span class="n">arg2</span> <span class="o">-</span> <span class="n">bigestPrime</span>
 <span class="n">flag_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">flag</span><span class="p">)</span>
 <span class="n">f</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">flag_str</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">'utf-8'</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">"flag{</span><span class="si">%s</span><span class="s2">}"</span><span class="o">%</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 </pre>
 
 
-<p>And there it is:</p>
-<pre class="code literal-block"><span></span>flag{5121b89fd330e8aaf59109e37ea3adf9c9497ee49dac1262e039919a9cb84912}
-</pre>
-
-
+<p>And here we have the content of the flag.</p>
 <p>...<strong>SQUEAK</strong>!</p>
 </div>
     </div>

@@ -263,11 +263,8 @@ bigestPrime = fac[-1]
 flag = arg2 - bigestPrime
 flag_str = str(flag)
 f = hashlib.sha256(flag_str.encode('utf-8')).hexdigest()
-print("flag{%s}"%(f))
+print(f)
 ```
-And there it is:
-```
-flag{5121b89fd330e8aaf59109e37ea3adf9c9497ee49dac1262e039919a9cb84912}
-```
+And here we have the content of the flag.
 
 ...**SQUEAK**!
