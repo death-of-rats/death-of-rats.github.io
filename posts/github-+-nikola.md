@@ -40,4 +40,4 @@ git subtree push --prefix output/ origin master
 
 What have I missed? I didn't add `.gitignore`...
 
-...**PIP**!
+...**SQUEAK**!

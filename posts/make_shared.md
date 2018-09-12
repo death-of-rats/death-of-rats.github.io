@@ -20,4 +20,4 @@ auto this->Place = std::make_shared<Blog>();
 
 It's some start... not necessarily a good one.
 
-...**PIP**!
+...**SQUEAK**!
