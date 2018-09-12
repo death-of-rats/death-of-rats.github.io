@@ -101,7 +101,7 @@
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
     <div>
-<p>Third challenge is a reverse engineering problem. Ziped package contains 3 files:</p>
+<p>The third challenge is a reverse engineering problem. The zipped package contains 3 files:</p>
 <pre class="code literal-block"><span></span>crackme_baby
 crackme.py
 run.sh
@@ -236,8 +236,8 @@ and import math functions: </p>
 
 
 <p>We will need this to find out what calculations take place in <code>calc_flag__object___object</code>. 
-I will replace <em>local_xxh</em> with known or choosen names.
-This way the graph below should be easer to underestand.</p>
+I will replace <em>local_xxh</em> with known or chosen names.
+This way the graph below should be easier to understand.</p>
 <pre class="code literal-block"><span></span>                                                        ...
                                    | mov qword [sup], rax                       |                               
                                    | mov edi, 2                                 |                               
@@ -318,22 +318,22 @@ This way the graph below should be easer to underestand.</p>
 </pre>
 
 
-<p>Calling python functions convention is to put adress of imported function to <code>rdi</code> register,
-adress of python object with first argument to <code>rsi</code> and second to <code>rdx</code>. Then there is a call to
- <code>sym.call__object___object___object</code>, result will be also python object which adress will be in <code>rax</code> register.</p>
-<p>Algorithm shown above could be describe like this:</p>
+<p>Calling python functions convention is to put the address of an imported function to <code>rdi</code> register and
+the address of python object with the first argument to <code>rsi</code>, <code>rdx</code> will have the second argument address. Then there is a call to
+ <code>sym.call__object___object___object</code>, the result will be also python object which address will be in <code>rax</code> register.</p>
+<p>The algorithm shown above could be described like this:</p>
 <ol>
 <li>Set <code>factor = 2</code> and <code>last_factor = 2</code>.</li>
-<li>Next we check if <code>d1</code> is greater than <code>1</code>. If not <code>return d2 - last_factor</code>.</li>
+<li>Next, we check if <code>d1</code> is greater than <code>1</code>. If not <code>return d2 - last_factor</code>.</li>
 <li>Test if <code>factor</code> divides <code>d1</code> with no rest. If <em>True</em> then go to <em>step 4</em>  else <em>step 5</em>.</li>
 <li>
-<code>d1 = d1 / factor</code> and save value of <code>factor</code> in <code>last_factor</code> and go to <em>step 2</em>. </li>
+<code>d1 = d1 / factor</code> and save the value of <code>factor</code> in <code>last_factor</code> and go to <em>step 2</em>. </li>
 <li>
 <code>factor += 1</code> and go to <em>step 2</em>.</li>
 </ol>
-<p>In other words when condition <code>d1 &gt; 1</code> will not be fullfilled <code>last_factor</code> will holds the greatest
- prime factor of <code>d1</code>. And this value will be substracted from <code>d2</code> and the result will be returned
- from function. As you might already suspect running this program will gives us nothing.
+<p>In other words, when condition <code>d1 &gt; 1</code> will not be fulfilled <code>last_factor</code> will hold the greatest
+ prime factor of <code>d1</code>. And this value will be subtracted from <code>d2</code> and the result will be returned
+ from the function. As you might already suspect running this program will give us nothing.
  So we better write our faster version of it.</p>
 <p>To get the greatest prime factor of <code>d1</code> I will use <strong><a href="https://pypi.org/project/primefac/">primefac</a></strong>  python library.</p>
 <pre class="code literal-block"><span></span><span class="kn">import</span> <span class="nn">primefac</span>
