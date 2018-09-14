@@ -241,7 +241,7 @@ The algorithm shown above could be described like this:
  1. Set `factor = 2` and `last_factor = 1`.
  2. Next, we check if `d1` is greater than `1`. If not `return d2 - last_factor`.
  3. Test if `factor` divides `d1` with no rest. If *True* then go to *step 4*  else *step 5*.
- 4. `d1 = d1 / factor` and save the value of `factor` in `last_factor` and go to *step 2*. 
+ 4. `d1 = d1 / factor` and save the value of `factor` in `last_factor` and go to *step 3*. 
  5. `factor += 1` and go to *step 2*.
 
 In other words, when condition `d1 > 1` will not be fulfilled `last_factor` will hold the greatest
