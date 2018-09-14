@@ -324,7 +324,7 @@ the address of python object with the first argument to <code>rsi</code>, <code>
  <code>sym.call__object___object___object</code>, the result will be also python object which address will be in <code>rax</code> register.</p>
 <p>The algorithm shown above could be described like this:</p>
 <ol>
-<li>Set <code>factor = 2</code> and <code>last_factor = 2</code>.</li>
+<li>Set <code>factor = 2</code> and <code>last_factor = 1</code>.</li>
 <li>Next, we check if <code>d1</code> is greater than <code>1</code>. If not <code>return d2 - last_factor</code>.</li>
 <li>Test if <code>factor</code> divides <code>d1</code> with no rest. If <em>True</em> then go to <em>step 4</em>  else <em>step 5</em>.</li>
 <li>
