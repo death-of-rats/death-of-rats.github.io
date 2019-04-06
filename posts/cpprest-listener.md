@@ -16,6 +16,8 @@ the program will handle only *GET* and *POST*. When the listener starts, we get 
 *cpprestsdk* uses `pplx::task<T>` for composing asynchronous operations (`...then().then().wait()`). The main
 loop is very simple, we just `while` infinitely.
 
+<!-- TEASER_END -->
+
 ```c++
 #include <cpprest/http_listener.h>
 #include <cpprest/json.h>
