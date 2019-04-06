@@ -55,8 +55,8 @@ make a decision if I should change **zsh** to another shell or just do not solve
 write solutions in Python script. Maybe I leave things as they are and just check how much pain it will bring 
 on me.
 
-For the record, I solve this mystery one day after solving this challenge. So how I eliminate those magic 
-bytes from my ret address?
+For the record, I solve this mystery one day after solving the challenge. So, how I eliminate those magic 
+bytes from my *ret* address?
 
 ```sh
 $ python3 -c 'print(138*"A"+"A\u0b44\u0004\u0008")' > pwn1_arg2
