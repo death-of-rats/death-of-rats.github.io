@@ -11,7 +11,7 @@
 <meta name="generator" content="Nikola (getnikola.com)">
 <link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
 <link rel="canonical" href="https://death-of-rats.github.io/">
-<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/icon_2018_ctf_third_challenge/" type="text/html">
+<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/how-my-shell-mess-with-me/" type="text/html">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -67,7 +67,75 @@
     
         
     <div class="postindex">
-            <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/icon_2018_ctf_third_challenge/" class="u-url">Icon 2018 CTF third challenge</a></h1>
+            <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/how-my-shell-mess-with-me/" class="u-url">How my shell mess with me</a></h1>
+                <div class="metadata">
+                    <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                        death-of-rats
+                    </span></p>
+                    <p class="dateline"><a href="posts/how-my-shell-mess-with-me/" rel="bookmark"><time class="published dt-published" datetime="2019-04-05T00:00:00Z" title="2019-04-05 00:00">2019-04-05 00:00</time></a></p>
+                        <p class="commentline">
+        
+    <a href="posts/how-my-shell-mess-with-me/#disqus_thread" data-disqus-identifier="cache/posts/how-my-shell-mess-with-me.html">Comments</a>
+
+
+                </p>
+</div>
+            </header><div class="e-content entry-content">
+                    <div>
+<p>Last week I spent 2h instead of 20 minutes on stack overflow challenge because my payload has some 
+strange values in the middle of jump address. I was impressed by this challenge, and how it managed to
+put some values between my bytes.
+Imagine my mood when I realized that it wasn't some special power of the program. It was my shell doing
+evil decoding behind the 
+scene.</p>
+<!-- TEASER_END -->
+
+<p>It all starts with a challenge. I'd got program with stack overflow vulnerability:</p>
+<pre class="code literal-block"><span></span>$ ./pwn1
+Tell me your name: AAAA...AAAA
+Hello, AAAA...AAAA
+<span class="o">[</span><span class="m">1</span><span class="o">]</span>    <span class="m">11870</span> segmentation fault <span class="o">(</span>core dumped<span class="o">)</span>  ./pwn1
+$
+</pre>
+
+
+<p>And when I want to generate payload with value to overwrite return address it won't work. In <strong>gdb</strong> 
+I notice that /my ret address wasn't what I intended it to be. It looks like this:</p>
+<pre class="code literal-block"><span></span>$ python3 -c <span class="s2">"print('\x08\x03\xcd\x44')"</span> <span class="p">|</span> hex
+0803c38d440a
+$ 
+</pre>
+
+
+<p>Yep, bolded bytes are not mine 0803c<strong>38</strong>d44<strong>0a</strong>. Should I blame python? Lets check:</p>
+<pre class="code literal-block"><span></span>$ <span class="nb">echo</span> <span class="s2">"print('\x08\x03\xcd\x44')"</span>
+print<span class="o">(</span>�D<span class="err">'</span><span class="o">)</span>
+$ 
+</pre>
+
+
+<p>Ok, so Python has that bizarre string to process instead of what I expected:</p>
+<pre class="code literal-block"><span></span>$ <span class="nb">echo</span> <span class="s1">'\x08\x03\xcd\x44'</span>
+<span class="se">\x</span><span class="m">08</span><span class="se">\x</span><span class="m">03</span><span class="se">\x</span>cd<span class="se">\x</span><span class="m">44</span>
+</pre>
+
+
+<p>So, shell (<strong>zsh</strong>) decode for me chars in command and pass it to python, which apparently does nothing 
+new - just print that chars further. When I switch to /bin/dash everything was as I expected - no evil decoding. I don't
+make a decision if I should change <strong>zsh</strong> to another shell or just do not solve challenges in the shell - always 
+write solutions in Python script. Maybe I leave things as they are and just check how much pain it will bring 
+on me.</p>
+<p>For the record, I solve this mystery one day after solving this challenge. So how I eliminate those magic 
+bytes from my ret address?</p>
+<pre class="code literal-block"><span></span>$ python3 -c <span class="s1">'print(138*"A"+"A\u0b44\u0004\u0008")'</span> &gt; pwn1_arg2
+</pre>
+
+
+<p>Yep, I found (by hand) encoded values which after decoding should give me my original bytes...</p>
+<p><strong>...SQUEAK!</strong></p>
+</div>
+                </div>
+            </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/icon_2018_ctf_third_challenge/" class="u-url">Icon 2018 CTF third challenge</a></h1>
                 <div class="metadata">
                     <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                         death-of-rats
