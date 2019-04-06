@@ -80,7 +80,7 @@
 
                 </p>
 </div>
-            </header><div class="p-summary entry-summary">
+            </header><div class="e-content entry-content">
                     <div>
 <p>Last week I spent 2h instead of 20 minutes on stack overflow challenge because my payload has some 
 strange values in the middle of jump address. I was impressed by this challenge, and how it managed to
@@ -88,7 +88,51 @@ put some values between my bytes.
 Imagine my mood when I realized that it wasn't some special power of the program. It was my shell doing
 evil decoding behind the 
 scene.</p>
-<p class="more"><a href="posts/how-my-shell-mess-with-me/">Read more…</a></p>
+<!-- TEASER_END -->
+
+<p>It all starts with a challenge. I'd got program with stack overflow vulnerability:</p>
+<pre class="code literal-block"><span></span>$ ./pwn1
+Tell me your name: AAAA...AAAA
+Hello, AAAA...AAAA
+<span class="o">[</span><span class="m">1</span><span class="o">]</span>    <span class="m">11870</span> segmentation fault <span class="o">(</span>core dumped<span class="o">)</span>  ./pwn1
+$
+</pre>
+
+
+<p>And when I want to generate payload with value to overwrite return address it won't work. In <strong>gdb</strong> 
+I notice that /my ret address wasn't what I intended it to be. It looks like this:</p>
+<pre class="code literal-block"><span></span>$ python3 -c <span class="s2">"print('\x08\x03\xcd\x44')"</span> <span class="p">|</span> hex
+0803c38d440a
+$ 
+</pre>
+
+
+<p>Yep, bolded bytes are not mine 0803c<strong>38</strong>d44<strong>0a</strong>. Should I blame python? Lets check:</p>
+<pre class="code literal-block"><span></span>$ <span class="nb">echo</span> <span class="s2">"print('\x08\x03\xcd\x44')"</span>
+print<span class="o">(</span>�D<span class="err">'</span><span class="o">)</span>
+$ 
+</pre>
+
+
+<p>Ok, so Python has that bizarre string to process instead of what I expected:</p>
+<pre class="code literal-block"><span></span>$ <span class="nb">echo</span> <span class="s1">'\x08\x03\xcd\x44'</span>
+<span class="se">\x</span><span class="m">08</span><span class="se">\x</span><span class="m">03</span><span class="se">\x</span>cd<span class="se">\x</span><span class="m">44</span>
+</pre>
+
+
+<p>So, shell (<strong>zsh</strong>) decode for me chars in command and pass it to python, which apparently does nothing 
+new - just print that chars further. When I switch to /bin/dash everything was as I expected - no evil decoding. I don't
+make a decision if I should change <strong>zsh</strong> to another shell or just do not solve challenges in the shell - always 
+write solutions in Python script. Maybe I leave things as they are and just check how much pain it will bring 
+on me.</p>
+<p>For the record, I solve this mystery one day after solving this challenge. So how I eliminate those magic 
+bytes from my ret address?</p>
+<pre class="code literal-block"><span></span>$ python3 -c <span class="s1">'print(138*"A"+"A\u0b44\u0004\u0008")'</span> &gt; pwn1_arg2
+</pre>
+
+
+<p>Yep, I found (by hand) encoded values which after decoding should give me my original bytes...</p>
+<p><strong>...SQUEAK!</strong></p>
 </div>
                 </div>
             </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/icon_2018_ctf_third_challenge/" class="u-url">Icon 2018 CTF third challenge</a></h1>
@@ -104,7 +148,7 @@ scene.</p>
 
                 </p>
 </div>
-            </header><div class="p-summary entry-summary">
+            </header><div class="e-content entry-content">
                     <div>
 <p>The third challenge is a reverse engineering problem. The zipped package contains 3 files:</p>
 <pre class="code literal-block"><span></span>crackme_baby
@@ -373,7 +417,7 @@ the address of python object with the first argument to <code>rsi</code>, <code>
 
                 </p>
 </div>
-            </header><div class="p-summary entry-summary">
+            </header><div class="e-content entry-content">
                     <div>
 <p>I want to try to build simple REST server demo with <em>cpprestsdk</em>. It is still experimental part of the library.</p>
 <p>Let's start the program. I want to listen on <em>localhost</em> on port 9000 with relative path <em>/demo</em>. For now, 
@@ -495,7 +539,7 @@ loop is very simple, we just <code>while</code> infinitely.</p>
 
                 </p>
 </div>
-            </header><div class="p-summary entry-summary">
+            </header><div class="e-content entry-content">
                     <div>
 <p>One can install the <a href="https://github.com/Microsoft/cpprestsdk">C++ REST SDK</a> running 
 <code>sudo apt install libcpprest-dev</code>. Unfortunately after that my CMake couldn't find it. 
@@ -503,8 +547,136 @@ I have some other troubles with compiling a project with cpprest. So I change my
 I built the library from the source 
 (<a href="https://github.com/Microsoft/cpprestsdk/wiki/How-to-build-for-Linux">instructions</a>).</p>
 <p>To try the new toy I choose this <a href="https://github.com/Microsoft/cpprestsdk/blob/master/Release/samples/BingRequest/bingrequest.cpp">sample</a>.
-</p>
-<p class="more"><a href="posts/building-cpprest-sample/">Read more…</a></p>
+<!-- TEASER_END -->
+For the test, I will rename the source file to <code>main.cpp</code>. Let us create CMakeLists.txt. The readme of 
+the project gives us the example:</p>
+<pre class="code literal-block"><span></span>cmake_minimum_required<span class="o">(</span>VERSION <span class="m">3</span>.7<span class="o">)</span>
+project<span class="o">(</span>main<span class="o">)</span>
+
+find_package<span class="o">(</span>cpprestsdk REQUIRED<span class="o">)</span>
+
+add_executable<span class="o">(</span>main main.cpp<span class="o">)</span>
+target_link_libraries<span class="o">(</span>main PRIVATE cpprestsdk::cpprest<span class="o">)</span>
+</pre>
+
+
+<p>I know this is the time of trial:</p>
+<pre class="code literal-block"><span></span>$ mkdir build
+$ <span class="nb">cd</span> build
+$ cmake ..
+</pre>
+
+
+<pre class="code literal-block"><span></span> -- The C compiler identification is GNU 7.3.0
+ -- The CXX compiler identification is GNU 7.3.0
+ -- Check for working C compiler: /usr/bin/cc
+ -- Check for working C compiler: /usr/bin/cc -- works
+ -- Detecting C compiler ABI info
+ -- Detecting C compiler ABI info - done
+ -- Detecting C compile features
+ -- Detecting C compile features - done
+ -- Check for working CXX compiler: /usr/bin/c++
+ -- Check for working CXX compiler: /usr/bin/c++ -- works
+ -- Detecting CXX compiler ABI info
+ -- Detecting CXX compiler ABI info - done
+ -- Detecting CXX compile features
+ -- Detecting CXX compile features - done
+ -- Found ZLIB: /usr/lib/x86_64-linux-gnu/libz.so (found version "1.2.11") 
+ -- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "1.1.0g") 
+ -- Configuring done
+ -- Generating done
+ -- Build files have been written to: ~/Projects/cpprest01/build
+</pre>
+
+
+<pre class="code literal-block"><span></span>$ make
+</pre>
+
+
+<pre class="code literal-block"><span></span> Scanning dependencies of target main
+ [ 50%] Building CXX object CMakeFiles/main.dir/main.cpp.o
+ [100%] Linking CXX executable main
+ /usr/bin/x86_64-linux-gnu-ld: CMakeFiles/main.dir/main.cpp.o: undefined reference to symbol '_ZN5boost6system15system_categoryEv'
+ //usr/lib/x86_64-linux-gnu/libboost_system.so.1.65.1: error adding symbols: DSO missing from command line
+ collect2: error: ld returned 1 exit status
+ CMakeFiles/main.dir/build.make:97: recipe for target 'main' failed
+ make[2]: \*\*\* [main] Error 1
+ CMakeFiles/Makefile2:67: recipe for target 'CMakeFiles/main.dir/all' failed
+ make[1]: \*\*\* [CMakeFiles/main.dir/all] Error 2
+ Makefile:83: recipe for target 'all' failed
+ make: \*\*\* [all] Error 2
+</pre>
+
+
+<h3>cmake for Microsoft/cpprestsdk</h3>
+<p>Ok, so it doesn't work... surprise, surprise.</p>
+<p>Time to go back to instructions for building <strong>cpprest</strong> on Linux. There is <code>g++</code> instruction 
+at the end of the page. It builds the project with our library:</p>
+<pre class="code literal-block"><span></span><span class="n">g</span><span class="o">++</span> <span class="o">-</span><span class="n">std</span><span class="o">=</span><span class="n">c</span><span class="o">++</span><span class="mi">11</span> <span class="n">my_file</span><span class="p">.</span><span class="n">cpp</span> <span class="o">-</span><span class="n">o</span> <span class="n">my_file</span> <span class="o">-</span><span class="n">lboost_system</span> <span class="o">-</span><span class="n">lcrypto</span> <span class="o">-</span><span class="n">lssl</span> <span class="o">-</span><span class="n">lcpprest</span> <span class="p">.</span><span class="o">/</span><span class="n">my_file</span>
+</pre>
+
+
+<p>And it works... So change our <code>CMakeLists.txt</code>. We want to use <em>Boost</em> and <em>OpenSSL</em> (this 
+library contains both <em>SSL</em> and <em>crypto</em>). Add this two libraries to cmake configuration:</p>
+<pre class="code literal-block"><span></span>...
+find_package<span class="o">(</span>Boost REQUIRED COMPONENTS system<span class="o">)</span>
+find_package<span class="o">(</span>OpenSSL REQUIRED<span class="o">)</span>
+                                             <span class="c1"># show lib paths</span>
+message<span class="o">(</span><span class="s2">"OpenSSL: "</span> <span class="si">${</span><span class="nv">OPENSSL_LIBRARIES</span><span class="si">}</span><span class="o">)</span>    <span class="c1"># libs to be linked by OpenSSL</span>
+message<span class="o">(</span><span class="s2">"Boost: "</span> <span class="si">${</span><span class="nv">Boost_LIBRARIES</span><span class="si">}</span><span class="o">)</span>        <span class="c1"># linked components of Boosta</span>
+
+add_executable<span class="o">(</span>main main.cpp<span class="o">)</span>
+target_link_libraries<span class="o">(</span>main PRIVATE
+    cpprestsdk::cpprest
+    <span class="si">${</span><span class="nv">Boost_LIBRARIES</span><span class="si">}</span>
+    <span class="si">${</span><span class="nv">OPENSSL_LIBRARIES</span><span class="si">}</span><span class="o">)</span>
+</pre>
+
+
+<pre class="code literal-block"><span></span>$ cmake ..
+</pre>
+
+
+<pre class="code literal-block"><span></span> -- The C compiler identification is GNU 7.3.0
+ -- The CXX compiler identification is GNU 7.3.0
+ -- Check for working C compiler: /usr/bin/cc
+ -- Check for working C compiler: /usr/bin/cc -- works
+ -- Detecting C compiler ABI info
+ -- Detecting C compiler ABI info - done
+ -- Detecting C compile features
+ -- Detecting C compile features - done
+ -- Check for working CXX compiler: /usr/bin/c++
+ -- Check for working CXX compiler: /usr/bin/c++ -- works
+ -- Detecting CXX compiler ABI info
+ -- Detecting CXX compiler ABI info - done
+ -- Detecting CXX compile features
+ -- Detecting CXX compile features - done
+ -- Found ZLIB: /usr/lib/x86_64-linux-gnu/libz.so (found version "1.2.11") 
+ -- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "1.1.0g") 
+ -- Boost version: 1.65.1
+ -- Found the following Boost libraries:
+ --   system
+ OpenSSL: /usr/lib/x86_64-linux-gnu/libssl.so/usr/lib/x86_64-linux-gnu/libcrypto.so
+ Boost: /usr/lib/x86_64-linux-gnu/libboost_system.so
+ -- Configuring done
+ -- Generating done
+ -- Build files have been written to: ~/Projects/cpprest01/build
+</pre>
+
+
+<pre class="code literal-block"><span></span>$ make
+</pre>
+
+
+<pre class="code literal-block"><span></span> Scanning dependencies of target main
+ [ 50%] Building CXX object CMakeFiles/main.dir/main.cpp.o
+ [100%] Linking CXX executable main
+ [100%] Built target main
+</pre>
+
+
+<p>Done. One day in a hundred lines...</p>
+<p>...<strong>SQUEAK</strong>!</p>
 </div>
                 </div>
             </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/travis-nikola/" class="u-url">0x02 travis + nikola</a></h1>
@@ -520,14 +692,71 @@ I built the library from the source
 
                 </p>
 </div>
-            </header><div class="p-summary entry-summary">
+            </header><div class="e-content entry-content">
                     <div>
 <p>One has running Nikola. One stores all ones work on GitHub and hosts it on the GitHub Pages. Nice. But 
 do I really need to push my changes to the repo, and when I'm ready, build static pages and push them 
 to the <code>master</code>. And what if I'm not at my computer, what if I must change some typo. It would be 
 nice if something could do this build and deploy the stuff for me.</p>
 <p>That is why I invite...</p>
-<p class="more"><a href="posts/travis-nikola/">Read more…</a></p>
+<!-- TEASER_END -->
+
+<h3>Travis CI</h3>
+<p>What one needs to have to proceed? Travis account connected to the GitHub account. Choose repository 
+with your site and change some settings. I checked <em>Build only if .travis.yml is present</em>, <em>Build 
+pushed branches</em> and <em>Build pushed pull requests</em>. </p>
+<p>As the 'checkbox' says Travis will build only if <em>.travis.yml</em> is present. So add it to the repo! 
+Travis should do 2 things: build static files and deploy them to master. The first part should look like:</p>
+<pre class="code literal-block"><span></span><span class="n">language</span><span class="o">:</span> <span class="n">python</span>
+<span class="n">cache</span><span class="o">:</span> <span class="n">apt</span>
+<span class="n">sudo</span><span class="o">:</span> <span class="kc">false</span>
+<span class="n">addons</span><span class="o">:</span>
+  <span class="n">apt</span><span class="o">:</span>
+    <span class="n">packages</span><span class="o">:</span>
+    <span class="o">-</span> <span class="n">language</span><span class="o">-</span><span class="n">pack</span><span class="o">-</span><span class="n">en</span><span class="o">-</span><span class="n">base</span>
+<span class="n">python</span><span class="o">:</span>
+<span class="o">-</span> <span class="mf">3.6</span><span class="o">.</span><span class="mi">5</span>
+<span class="n">branches</span><span class="o">:</span>
+  <span class="n">except</span><span class="o">:</span>
+  <span class="o">-</span> <span class="n">master</span>
+<span class="n">install</span><span class="o">:</span>
+<span class="o">-</span> <span class="n">pip</span> <span class="n">install</span> <span class="s1">'Nikola[extras]'</span><span class="o">==</span><span class="mf">8.0</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="na">b2</span>
+<span class="n">script</span><span class="o">:</span>
+<span class="o">-</span> <span class="n">nikola</span> <span class="n">build</span> 
+</pre>
+
+
+<p>First 9 lines: Nikola is written in python, it is why we need it in, at least, version 3. 
+Travis should ignore any changes on master branch (he will do them himself after all), that's the 
+reason for excepting branch master. First, we have to install Nikola using pip. I forced 
+version 8.0.0.b2 for its built-in theme. By default, <strong>pip</strong> installs version 7 of Nikola. After all 
+this 'work' there is time for build script: <code>nikola build</code>.</p>
+<p>Ok, so now we have our site build. How deploy it on GitHub Pages? One could play with <code>nikola deploy</code> 
+or a few <code>git</code> commands, but Travis has a deploy provider for that:</p>
+<pre class="code literal-block"><span></span><span class="n">deploy</span><span class="o">:</span>
+    <span class="n">provider</span><span class="o">:</span> <span class="n">pages</span>
+    <span class="n">skip</span><span class="o">-</span><span class="n">cleanup</span><span class="o">:</span> <span class="kc">true</span>
+    <span class="n">keep</span><span class="o">-</span><span class="n">history</span><span class="o">:</span> <span class="kc">true</span>
+    <span class="n">github</span><span class="o">-</span><span class="n">token</span><span class="o">:</span> <span class="n">$GITHUB_TOKEN</span>
+    <span class="n">local</span><span class="o">-</span><span class="n">dir</span><span class="o">:</span> <span class="n">output</span>
+    <span class="n">target</span><span class="o">-</span><span class="n">branch</span><span class="o">:</span> <span class="n">master</span>
+    <span class="n">verbose</span><span class="o">:</span> <span class="kc">true</span>
+    <span class="n">repo</span><span class="o">:</span> <span class="n">death</span><span class="o">-</span><span class="n">of</span><span class="o">-</span><span class="n">rats</span><span class="o">/</span><span class="n">death</span><span class="o">-</span><span class="n">of</span><span class="o">-</span><span class="n">rats</span><span class="o">.</span><span class="na">github</span><span class="o">.</span><span class="na">io</span>
+    <span class="n">on</span><span class="o">:</span>
+        <span class="n">branch</span><span class="o">:</span> <span class="n">source</span>
+</pre>
+
+
+<p>More information could be found at <a href="https://docs.travis-ci.com/user/deployment/pages/">TCI01</a>. 
+I added <code>local-dir</code> to set what should be deployed and where (<code>repo</code> and <code>target-branch: master</code>). 
+This operation should take place on <em>source</em> branch.</p>
+<p>In GitHub <em>Settings &gt; Developer settings &gt; Personal access tokens</em> <code>Generate new token</code> for Travis. 
+At <a href="https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/">GH01</a> 
+you can read what to do. This token insert in Travis settings Environment Variables and use it by 
+<em>$VariableName</em>. </p>
+<p>Ok, now is the time to push changes and watch how Travis is building and deploying <strong>Your</strong> site.</p>
+<p>Easy, I almost forget about that 4 hours of tries...</p>
+<p>...<strong>SQUEAK</strong>!</p>
 </div>
                 </div>
             </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/github-%2B-nikola/" class="u-url">0x01 github + nikola</a></h1>
@@ -543,7 +772,7 @@ nice if something could do this build and deploy the stuff for me.</p>
 
                 </p>
 </div>
-            </header><div class="p-summary entry-summary">
+            </header><div class="e-content entry-content">
                     <div>
 <p>How to start GitHub repo for hosting pages with Nikola. I want a branch (let us name it <code>source</code>) where I will keep my project. I plan to generate static files to some folder and push it to the <code>master</code> branch. In other words, <code>master</code> branch will have my site and <code>source</code> branch will have the whole Nikola engine with my source files.</p>
 <p>I need to create new repo: <em><username>.github.io</username></em> on GitHub page. Next, I will clone it to the local folder, make my branch and push it.</p>
@@ -587,7 +816,7 @@ git subtree push --prefix output/ origin master
 
                 </p>
 </div>
-            </header><div class="p-summary entry-summary">
+            </header><div class="e-content entry-content">
                     <div>
 <h3>This is the place...</h3>
 <p>... where I dump my RAM - thoughts I don't want to lose. </p>
