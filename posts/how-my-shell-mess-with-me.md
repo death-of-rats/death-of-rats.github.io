@@ -1,7 +1,7 @@
 <!--
 .. title: How my shell mess with me
 .. slug: how-my-shell-mess-with-me
-.. date: 2019-04-05 00:00:00 UTC
+.. date: 2019-04-05 00:00:00 UTC+02:00
 .. tags: shell, tools 
 .. category: fails
 .. link: 
