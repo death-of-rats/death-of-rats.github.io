@@ -142,8 +142,8 @@ new - just print that chars further. When I switch to /bin/dash everything was a
 make a decision if I should change <strong>zsh</strong> to another shell or just do not solve challenges in the shell - always 
 write solutions in Python script. Maybe I leave things as they are and just check how much pain it will bring 
 on me.</p>
-<p>For the record, I solve this mystery one day after solving this challenge. So how I eliminate those magic 
-bytes from my ret address?</p>
+<p>For the record, I solve this mystery one day after solving the challenge. So, how I eliminate those magic 
+bytes from my <em>ret</em> address?</p>
 <pre class="code literal-block"><span></span>$ python3 -c <span class="s1">'print(138*"A"+"A\u0b44\u0004\u0008")'</span> &gt; pwn1_arg2
 </pre>
 
