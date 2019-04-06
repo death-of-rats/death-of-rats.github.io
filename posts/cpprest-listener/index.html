@@ -108,6 +108,8 @@
 the program will handle only <em>GET</em> and <em>POST</em>. When the listener starts, we get a notification. 
 <em>cpprestsdk</em> uses <code>pplx::task&lt;T&gt;</code> for composing asynchronous operations (<code>...then().then().wait()</code>). The main
 loop is very simple, we just <code>while</code> infinitely.</p>
+<!-- TEASER_END -->
+
 <pre class="code literal-block"><span></span><span class="cp">#include</span> <span class="cpf">&lt;cpprest/http_listener.h&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;cpprest/json.h&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>

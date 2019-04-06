@@ -19,6 +19,7 @@ run.sh
 
 Python file contains definitions of simple math operations (add, sub, mul, div2, mod, inf). Let us
  disassemble crackme_baby file.
+<!-- TEASER_END -->
 
 Main function shows us that 2 long variables are in play, `d1 = 25052671110843108` 
  and `d2 = 16420105858350620421142892712`. They are passed to `calc_flag__object___object` to calculate 
