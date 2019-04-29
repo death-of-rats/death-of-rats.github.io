@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="Debug booting program with gdb and qemu. ">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>0x08 Debug booting code in QEMU | Death Of Rats</title>
+<link href="../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Playfair+Display:700,900" rel="stylesheet">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="canonical" href="https://death-of-rats.github.io/posts/gdb-qemu-booting/">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="Debug booting program with gdb and qemu. ">
+<meta name="author" content="death-of-rats">
+<meta property="og:site_name" content="Death Of Rats">
+<meta property="og:title" content="0x08 Debug booting code in QEMU">
+<meta property="og:url" content="https://death-of-rats.github.io/posts/gdb-qemu-booting/">
+<meta property="og:description" content="Debug booting program with gdb and qemu. ">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2019-05-03T00:00:00Z">
+<meta property="article:tag" content="asm">
+<meta property="article:tag" content="os">
+<meta property="article:tag" content="qemu">
+<meta property="article:tag" content="re">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Header and menu bar -->
+<div class="container">
+      <header class="blog-header py-3"><div class="row nbb-header align-items-center">
+          <div class="col-md-3 col-xs-2 col-sm-2" style="width: auto;">
+            <button class="navbar-toggler navbar-light bg-light nbb-navbar-toggler" type="button" data-toggle="collapse" data-target=".bs-nav-collapsible" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse bs-nav-collapsible bootblog4-search-form-holder">
+                
+            </div>
+        </div>
+          <div class="col-md-6 col-xs-10 col-sm-10 bootblog4-brand" style="width: auto;">
+            <a class="navbar-brand blog-header-logo text-dark" href="https://death-of-rats.github.io/">
+
+            <span id="blog-title">Death Of Rats</span>
+        </a>
+          </div>
+            <div class="col-md-3 justify-content-end align-items-center bs-nav-collapsible collapse flex-collapse bootblog4-right-nav">
+            <nav class="navbar navbar-light bg-white"><ul class="navbar-nav bootblog4-right-nav">
+<li class="nav-item">
+    <a href="index.md" id="sourcelink" class="nav-link">Source</a>
+    </li>
+
+
+                    
+            </ul></nav>
+</div>
+    </div>
+</header><nav class="navbar navbar-expand-md navbar-light bg-white static-top"><div class="collapse navbar-collapse bs-nav-collapsible" id="bs-navbar">
+            <ul class="navbar-nav nav-fill d-flex w-100">
+<li class="nav-item">
+<a href="../../archive.html" class="nav-link">Archive</a>
+                </li>
+<li class="nav-item">
+<a href="../../categories/" class="nav-link">Tags</a>
+                </li>
+<li class="nav-item">
+<a href="../../rss.xml" class="nav-link">RSS feed</a>
+
+                
+            </li>
+</ul>
+</div>
+<!-- /.navbar-collapse -->
+</nav>
+</div>
+
+<div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        
+        
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">0x08 Debug booting code in QEMU</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                    death-of-rats
+            </span></p>
+            <p class="dateline"><a href="." rel="bookmark"><time class="published dt-published" datetime="2019-05-03T00:00:00Z" itemprop="datePublished" title="2019-05-03 00:00">2019-05-03 00:00</time></a></p>
+                <p class="commentline">
+        
+    <a href="#disqus_thread" data-disqus-identifier="cache/posts/gdb-qemu-booting.html">Comments</a>
+
+
+            
+        </p>
+<p class="sourceline"><a href="index.md" class="sourcelink">Source</a></p>
+
+        </div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>How to test and debug your own OS? For running one can use any of available
+emulators or VMs. I choose <strong>QEMU</strong>. But running isn't enough. Debugging is
+very important - at least for me. In this post, I will build the 'OS' image,
+run it and attach <strong>gdb</strong> for debugging.</p>
+<!-- TEASER_END -->
+
+<p>First things first. Let's check our 'OS' example.</p>
+<pre class="code literal-block"><span></span><span class="c">; os00.asm</span>
+<span class="err">[</span><span class="nf">bits</span> <span class="mi">16</span><span class="p">]</span>
+<span class="err">[</span><span class="nf">org</span> <span class="mi">0x7c00</span><span class="p">]</span>
+
+<span class="nl">start:</span>
+  <span class="nf">xor</span> <span class="no">ax</span><span class="p">,</span><span class="no">ax</span>
+  <span class="nf">mov</span> <span class="no">ds</span><span class="p">,</span> <span class="no">ax</span>
+  <span class="nf">mov</span> <span class="no">es</span><span class="p">,</span> <span class="no">ax</span>
+  <span class="nf">mov</span> <span class="no">bx</span><span class="p">,</span> <span class="mi">0x8000</span>
+
+  <span class="nf">mov</span> <span class="no">si</span><span class="p">,</span> <span class="no">msg</span>
+  <span class="nf">call</span> <span class="no">print_msg</span>
+
+  <span class="nf">msg</span> <span class="no">db</span> <span class="err">'</span><span class="no">Welcomme</span><span class="p">,</span> <span class="no">this</span> <span class="no">is</span> <span class="no">OS</span> <span class="mi">0x00</span><span class="err">'</span><span class="p">,</span> <span class="mi">0xa</span><span class="p">,</span> <span class="mi">0x0</span>
+
+<span class="nl">print_msg:</span>
+  <span class="nf">mov</span> <span class="no">ah</span><span class="p">,</span> <span class="mi">0x0e</span>
+<span class="nl">.repeat_printing:</span>
+  <span class="nf">lodsb</span>
+  <span class="nf">cmp</span> <span class="no">al</span><span class="p">,</span> <span class="mi">0</span>
+  <span class="nf">je</span> <span class="no">.done_printing</span>
+  <span class="nf">int</span> <span class="mi">0x10</span>
+  <span class="nf">jmp</span> <span class="no">.repeat_printing</span>
+<span class="nl">.done_printing:</span>
+  <span class="nf">ret</span>
+
+  <span class="nf">times</span> <span class="p">(</span><span class="mi">510</span> <span class="p">-</span> <span class="p">(</span><span class="no">$</span> <span class="p">-</span> <span class="no">$$</span><span class="p">))</span> <span class="no">db</span> <span class="mi">0x00</span>
+  <span class="nf">dw</span> <span class="mi">0xAA55</span>
+</pre>
+
+
+<p>Now build <em>.bin</em> image. </p>
+<pre class="code literal-block"><span></span>$ yasm -f bin -o os00.bin os00.asm
+</pre>
+
+
+<p><em>.bin</em> format cannot contain debug symbols so no <code>-g dwarf2</code>.</p>
+<p>And run the image in the emulator:</p>
+<pre class="code literal-block"><span></span>$ qemu-system-i368 os00.bin
+
+WARNING: Image format was not specified <span class="k">for</span> <span class="s1">'os00.bin'</span> and probing guessed raw.
+         Automatically detecting the format is dangerous <span class="k">for</span> raw images, write
+         operations on block <span class="m">0</span> will be restricted.
+         Specify the <span class="s1">'raw'</span> format explicitly to remove the restrictions.
+</pre>
+
+
+<p>Nice, but still some warnings. So, after reading some man pages, let's try this way.</p>
+<pre class="code literal-block"><span></span>$ qemu-system-i386 -drive <span class="nv">format</span><span class="o">=</span>raw,file<span class="o">=</span>os00.bin
+</pre>
+
+
+<p>Now it's time to debug. What we need is to run <strong>QEMU</strong> and wait for <strong>gdb</strong>.
+<strong>QEMU</strong> has an argument <code>-S</code> (uppercase s) which stops the CPU until a <em>continue</em>
+will be sent to it. We need also to tell the emulator to listen after
+<strong>gdb</strong> on the selected port. The argument <code>-gdb tcp::8000</code> listen on the 8000
+port for <strong>gdb</strong> connection. Instead <code>-gdb</code> you could use <code>-s</code> (small
+'s') which is short for <code>-gdb tcp::1234</code>. As I mentioned earlier <em>.bin</em>
+doesn't have debug information so there is no need to run <strong>gdb</strong> with
+<em>os00.bin</em>.</p>
+<pre class="code literal-block"><span></span>$ qemu-system-i386 -S -gdb tcp::8000 -drive <span class="nv">format</span><span class="o">=</span>raw,file<span class="o">=</span>os00.bin
+<span class="o">[</span><span class="m">1</span><span class="o">]</span> <span class="m">44444</span>
+$ gdb
+ ...
+pwndbg&gt; target remote localhost:8000
+Remote debugging using localhost:8000
+warning: No executable has been specified and target does not support
+determining executable automatically.  Try using the <span class="s2">"file"</span> command.
+0x0000fff0 in ?? <span class="o">()</span>
+Could not check ASLR: Couldn<span class="err">'</span>t get personality
+LEGEND: STACK <span class="p">|</span> HEAP <span class="p">|</span> CODE <span class="p">|</span> DATA <span class="p">|</span> RWX <span class="p">|</span> RODATA
+─────────────────────────────<span class="o">[</span> REGISTERS <span class="o">]</span>──────────────────────────────
+ EAX  <span class="m">0</span> ◂— <span class="m">0</span>
+ EBX  <span class="m">0</span> ◂— <span class="m">0</span>
+ ECX  <span class="m">0</span> ◂— <span class="m">0</span>
+ EDX  0x663 —▸ <span class="m">0</span> ◂— <span class="m">0</span>
+ EDI  <span class="m">0</span> ◂— <span class="m">0</span>
+ ESI  <span class="m">0</span> ◂— <span class="m">0</span>
+ EBP  <span class="m">0</span> ◂— <span class="m">0</span>
+ ESP  <span class="m">0</span> ◂— <span class="m">0</span>
+ EIP  0xfff0 —▸ <span class="m">0</span> ◂— <span class="m">0</span>
+───────────────────────────────<span class="o">[</span> DISASM <span class="o">]</span>───────────────────────────────
+ ► 0xfff0     add    byte ptr <span class="o">[</span>eax<span class="o">]</span>, al
+   0xfff2     add    byte ptr <span class="o">[</span>eax<span class="o">]</span>, al
+   0xfff4     add    byte ptr <span class="o">[</span>eax<span class="o">]</span>, al
+   0xfff6     add    byte ptr <span class="o">[</span>eax<span class="o">]</span>, al
+   0xfff8     add    byte ptr <span class="o">[</span>eax<span class="o">]</span>, al
+   0xfffa     add    byte ptr <span class="o">[</span>eax<span class="o">]</span>, al
+   0xfffc     add    byte ptr <span class="o">[</span>eax<span class="o">]</span>, al
+   0xfffe     add    byte ptr <span class="o">[</span>eax<span class="o">]</span>, al
+   0x10000    add    byte ptr <span class="o">[</span>eax<span class="o">]</span>, al
+   0x10002    add    byte ptr <span class="o">[</span>eax<span class="o">]</span>, al
+   0x10004    add    byte ptr <span class="o">[</span>eax<span class="o">]</span>, al
+───────────────────────────────<span class="o">[</span> STACK <span class="o">]</span>────────────────────────────────
+<span class="m">00</span>:0000│ eax ebx ecx edi esi ebp esp eflags-2  <span class="m">0</span> ◂— <span class="m">0</span>
+... ↓
+─────────────────────────────<span class="o">[</span> BACKTRACE <span class="o">]</span>──────────────────────────────
+ ► f <span class="m">0</span>     fff0
+pwndbg&gt; b *0x7c00
+Breakpoint <span class="m">1</span> at 0x7c00
+pwndbg&gt; c
+Continuing.
+
+Breakpoint <span class="m">1</span>, 0x00007c00 in ?? <span class="o">()</span>
+LEGEND: STACK <span class="p">|</span> HEAP <span class="p">|</span> CODE <span class="p">|</span> DATA <span class="p">|</span> RWX <span class="p">|</span> RODATA
+──────────────────────────────<span class="o">[</span> REGISTERS <span class="o">]</span>───────────────────────────────
+ EAX  0xaa55 —▸ <span class="m">0</span> —▸ 0xf000ff53 ◂— <span class="m">0</span>
+ EBX  <span class="m">0</span> —▸ 0xf000ff53 ◂— <span class="m">0</span>
+ ECX  <span class="m">0</span> —▸ 0xf000ff53 ◂— <span class="m">0</span>
+ EDX  <span class="m">128</span> —▸ 0xf000ff53 —▸ <span class="m">0</span> ◂— push   ebx /* 0xf000ff53 */
+ EDI  <span class="m">0</span> —▸ 0xf000ff53 ◂— <span class="m">0</span>
+ ESI  <span class="m">0</span> —▸ 0xf000ff53 ◂— <span class="m">0</span>
+ EBP  <span class="m">0</span> —▸ 0xf000ff53 ◂— <span class="m">0</span>
+ ESP  0x6ef0 —▸ 0xf000d038 —▸ <span class="m">0</span> —▸ 0xf000ff53 ◂— <span class="m">0</span>
+ EIP  0x7c00 —▸ 0xd88ec031 —▸ <span class="m">0</span> —▸ 0xf000ff53 ◂— <span class="m">0</span>
+────────────────────────────────<span class="o">[</span> DISASM <span class="o">]</span>────────────────────────────────
+ ► 0x7c00    xor    eax, eax
+   0x7c02    mov    ds, eax
+   0x7c04    mov    es, eax
+   0x7c06    mov    ebx, 0xfbe8000
+   0x7c0b    jl     0x7bf5
+
+   0x7c0d    sbb    eax, dword ptr <span class="o">[</span>eax<span class="o">]</span>
+   0x7c0f    push   edi
+   0x7c10    insb   byte ptr es:<span class="o">[</span>edi<span class="o">]</span>, dx
+   0x7c12    arpl   word ptr <span class="o">[</span>edi + 0x6d<span class="o">]</span>, bp
+   0x7c15    insd   dword ptr es:<span class="o">[</span>edi<span class="o">]</span>, dx
+   0x7c16    sub    al, 0x20
+────────────────────────────────<span class="o">[</span> STACK <span class="o">]</span>─────────────────────────────────
+<span class="m">00</span>:0000│ esp  0x6ef0 —▸ 0xf000d038 —▸ <span class="m">0</span> —▸ 0xf000ff53 ◂— <span class="m">0</span>
+<span class="m">01</span>:0004│      0x6ef4 —▸ <span class="m">0</span> —▸ 0xf000ff53 ◂— <span class="m">0</span>
+<span class="m">02</span>:0008│      0x6ef8 —▸ 0x6f4e —▸ <span class="m">0</span> —▸ 0xf000ff53 ◂— <span class="m">0</span>
+<span class="m">03</span>:000c│      0x6efc —▸ <span class="m">0</span> —▸ 0xf000ff53 ◂— <span class="m">0</span>
+<span class="m">04</span>:0010│      0x6f00 —▸ 0x7ec4 —▸ <span class="m">0</span> —▸ 0xf000ff53 ◂— <span class="m">0</span>
+<span class="m">05</span>:0014│      0x6f04 —▸ 0x6f4e —▸ <span class="m">0</span> —▸ 0xf000ff53 ◂— <span class="m">0</span>
+<span class="m">06</span>:0018│      0x6f08 —▸ <span class="m">0</span> —▸ 0xf000ff53 ◂— <span class="m">0</span>
+<span class="m">07</span>:001c│      0x6f0c —▸ 0x7e8b —▸ <span class="m">0</span> —▸ 0xf000ff53 ◂— <span class="m">0</span>
+──────────────────────────────<span class="o">[</span> BACKTRACE <span class="o">]</span>───────────────────────────────
+ ► f <span class="m">0</span>     7c00
+Breakpoint *0x7c00
+pwndbg&gt;
+</pre>
+
+
+<p>As you can see, there is some mismatch in disassembled code after <code>mov ebx,
+0xfbe8000</code>. Yes, the original code looks different. </p>
+<p>After some
+<a href="https://stackoverflow.com/questions/32955887/how-to-disassemble-16-bit-x86-boot-sector-code-in-gdb-with-x-i-pc-it-gets-tr/32960272#32960272">reading</a>,
+I find out that usually <code>set architecture i8086</code> solves the problem. Until
+at least <strong>gdb</strong> version 8. But there is another way of building the code so
+one could use debug symbols during debugging.</p>
+<p>From the code I need to throw away <code>org</code> as it is not allowed in <em>elf</em>,
+the linker will take this address. Next, we build <em>elf</em>, linked, <em>objcopy</em> binaries
+to <em>.img</em> and run <strong>gdb</strong> with symbols from <em>.elf</em>.  </p>
+<pre class="code literal-block"><span></span>$ yasm -f elf32 -g dwarf2 os00_v2.asm -o os00_v2.o
+$ ld -Ttext<span class="o">=</span>0x7c00 -melf_i386 os00_v2.o -o os00_v2.elf
+ld: warning: cannot find entry symbol _start<span class="p">;</span> defaulting to 0000000000007c00
+$ objcopy -O binary os00_v2.elf os00_v2.img
+$ qemu-system-i386 -S -s -drive <span class="nv">format</span><span class="o">=</span>raw,file<span class="o">=</span>os00_v2.img <span class="p">&amp;</span>
+<span class="o">[</span><span class="m">1</span><span class="o">]</span> <span class="m">55555</span>
+$ gdb os00_v2.elf
+ ...
+Reading symbols from os00_v2.elf...done.
+pwndbg&gt; target remote localhost:1234
+Remote debugging using localhost:1234
+pwndbg&gt; b *0x7c00
+Breakpoint <span class="m">1</span> at 0x7c00: file os00_v2.asm, line <span class="m">5</span>.
+pwndbg&gt; c
+Continuing.
+Breakpoint <span class="m">1</span>, start <span class="o">()</span> at os00_v2.asm:5
+<span class="m">5</span>     xor ax,ax
+LEGEND: STACK <span class="p">|</span> HEAP <span class="p">|</span> CODE <span class="p">|</span> DATA <span class="p">|</span> RWX <span class="p">|</span> RODATA
+───────────────────────────────<span class="o">[</span> REGISTERS <span class="o">]</span>───────────────────────────────
+ EAX  0xaa55 —▸ <span class="m">0</span> —▸ 0xf000ff53 ◂— <span class="m">0</span>
+ EBX  <span class="m">0</span> —▸ 0xf000ff53 ◂— <span class="m">0</span>
+ ECX  <span class="m">0</span> —▸ 0xf000ff53 ◂— <span class="m">0</span>
+ EDX  <span class="m">128</span> —▸ 0xf000ff53 —▸ <span class="m">0</span> ◂— push   ebx /* 0xf000ff53 */
+ EDI  <span class="m">0</span> —▸ 0xf000ff53 ◂— <span class="m">0</span>
+ ESI  <span class="m">0</span> —▸ 0xf000ff53 ◂— <span class="m">0</span>
+ EBP  <span class="m">0</span> —▸ 0xf000ff53 ◂— <span class="m">0</span>
+ ESP  0x6ef0 —▸ 0xf000d038 —▸ <span class="m">0</span> —▸ 0xf000ff53 ◂— <span class="m">0</span>
+ EIP  0x7c00 —▸ 0xd88ec031 —▸ <span class="m">0</span> —▸ 0xf000ff53 ◂— <span class="m">0</span>
+─────────────────────────────────<span class="o">[</span> DISASM <span class="o">]</span>─────────────────────────────────
+ ► 0x7c00    xor    eax, eax
+   0x7c02    mov    ds, eax
+   0x7c04    mov    es, eax
+   0x7c06    mov    ebx, 0xfbe8000
+   0x7c0b    jl     0x7bf5
+
+   0x7c0d    sbb    eax, dword ptr <span class="o">[</span>eax<span class="o">]</span>
+   0x7c0f    push   edi
+   0x7c10    insb   byte ptr es:<span class="o">[</span>edi<span class="o">]</span>, dx
+   0x7c12    arpl   word ptr <span class="o">[</span>edi + 0x6d<span class="o">]</span>, bp
+   0x7c15    insd   dword ptr es:<span class="o">[</span>edi<span class="o">]</span>, dx
+   0x7c16    sub    al, 0x20
+───────────────────────────────<span class="o">[</span> SOURCE <span class="o">(</span>CODE<span class="o">)</span> <span class="o">]</span>──────────────────────────────
+In file: /home/jurek/Projects/os/os00/os00_v2.asm
+    <span class="m">1</span> bits <span class="m">16</span>
+    <span class="m">2</span> <span class="p">;</span><span class="o">[</span>org 0x7c00<span class="o">]</span>
+    <span class="m">3</span>
+    <span class="m">4</span> start:
+ ►  <span class="m">5</span>   xor ax,ax
+    <span class="m">6</span>   mov ds, ax
+    <span class="m">7</span>   mov es, ax
+    <span class="m">8</span>   mov bx, 0x8000
+    <span class="m">9</span>
+   <span class="m">10</span>   mov si, msg
+──────────────────────────────────<span class="o">[</span> STACK <span class="o">]</span>─────────────────────────────────
+<span class="m">00</span>:0000│ esp  0x6ef0 —▸ 0xf000d038 —▸ <span class="m">0</span> —▸ 0xf000ff53 ◂— <span class="m">0</span>
+<span class="m">01</span>:0004│      0x6ef4 —▸ <span class="m">0</span> —▸ 0xf000ff53 ◂— <span class="m">0</span>
+<span class="m">02</span>:0008│      0x6ef8 —▸ 0x6f4e —▸ <span class="m">0</span> —▸ 0xf000ff53 ◂— <span class="m">0</span>
+<span class="m">03</span>:000c│      0x6efc —▸ <span class="m">0</span> —▸ 0xf000ff53 ◂— <span class="m">0</span>
+<span class="m">04</span>:0010│      0x6f00 —▸ 0x7ec4 —▸ <span class="m">0</span> —▸ 0xf000ff53 ◂— <span class="m">0</span>
+<span class="m">05</span>:0014│      0x6f04 —▸ 0x6f4e —▸ <span class="m">0</span> —▸ 0xf000ff53 ◂— <span class="m">0</span>
+<span class="m">06</span>:0018│      0x6f08 —▸ <span class="m">0</span> —▸ 0xf000ff53 ◂— <span class="m">0</span>
+<span class="m">07</span>:001c│      0x6f0c —▸ 0x7e8b —▸ <span class="m">0</span> —▸ 0xf000ff53 ◂— <span class="m">0</span>
+────────────────────────────────<span class="o">[</span> BACKTRACE <span class="o">]</span>───────────────────────────────
+ ► f <span class="m">0</span>     7c00
+Breakpoint *0x7c00
+pwndbg&gt;
+</pre>
+
+
+<p>Somewhat better. What if I try to disassemble <em>.bin</em> file with objdump?</p>
+<pre class="code literal-block"><span></span>$ objdump -D -b binary -mi8086 -Maddr16,data16 os00.bin
+
+os00.bin:     file format binary
+
+
+Disassembly of section .data:
+
+<span class="m">00000000</span> &lt;.data&gt;:
+   <span class="m">0</span>:   <span class="m">31</span> c0                   xor    %ax,%ax
+   <span class="m">2</span>:   8e d8                   mov    %ax,%ds
+   <span class="m">4</span>:   8e c0                   mov    %ax,%es
+   <span class="m">6</span>:   bb <span class="m">00</span> <span class="m">80</span>                mov    <span class="nv">$0</span>x8000,%bx
+   <span class="m">9</span>:   be 0f 7c                mov    <span class="nv">$0</span>x7c0f,%si
+   c:   e8 1b <span class="m">00</span>                call   0x2a
+   f:   <span class="m">57</span>                      push   %di
+  <span class="m">10</span>:   <span class="m">65</span> 6c                   gs insb <span class="o">(</span>%dx<span class="o">)</span>,%es:<span class="o">(</span>%di<span class="o">)</span>
+  <span class="m">12</span>:   <span class="m">63</span> 6f 6d                arpl   %bp,0x6d<span class="o">(</span>%bx<span class="o">)</span>
+  <span class="m">15</span>:   6d                      insw   <span class="o">(</span>%dx<span class="o">)</span>,%es:<span class="o">(</span>%di<span class="o">)</span>
+  <span class="m">16</span>:   <span class="m">65</span> 2c <span class="m">20</span>                gs sub <span class="nv">$0</span>x20,%al
+  <span class="m">19</span>:   <span class="m">74</span> <span class="m">68</span>                   je     0x83
+  1b:   <span class="m">69</span> <span class="m">73</span> <span class="m">20</span> <span class="m">69</span> <span class="m">73</span>          imul   <span class="nv">$0</span>x7369,0x20<span class="o">(</span>%bp,%di<span class="o">)</span>,%si
+  <span class="m">20</span>:   <span class="m">20</span> 4f <span class="m">53</span>                and    %cl,0x53<span class="o">(</span>%bx<span class="o">)</span>
+  <span class="m">23</span>:   <span class="m">20</span> <span class="m">30</span>                   and    %dh,<span class="o">(</span>%bx,%si<span class="o">)</span>
+  <span class="m">25</span>:   <span class="m">78</span> <span class="m">30</span>                   js     0x57
+  <span class="m">27</span>:   <span class="m">30</span> 0a                   xor    %cl,<span class="o">(</span>%bp,%si<span class="o">)</span>
+  <span class="m">29</span>:   <span class="m">00</span> b4 0e ac             add    %dh,-0x53f2<span class="o">(</span>%si<span class="o">)</span>
+  2d:   3c <span class="m">00</span>                   cmp    <span class="nv">$0</span>x0,%al
+  2f:   <span class="m">74</span> <span class="m">04</span>                   je     0x35
+  <span class="m">31</span>:   <span class="nb">cd</span> <span class="m">10</span>                   int    <span class="nv">$0</span>x10
+  <span class="m">33</span>:   eb f7                   jmp    0x2c
+  <span class="m">35</span>:   c3                      ret
+    ...
+ 1fe:   <span class="m">55</span>                      push   %bp
+ 1ff:   aa                      stos   %al,%es:<span class="o">(</span>%di<span class="o">)</span>
+$ 
+</pre>
+
+
+<p>Close... Maybe I need to align my code...</p>
+<p>...<strong>SQUEAK</strong>!</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../../categories/asm/" rel="tag">asm</a></li>
+            <li><a class="tag p-category" href="../../categories/os/" rel="tag">os</a></li>
+            <li><a class="tag p-category" href="../../categories/qemu/" rel="tag">qemu</a></li>
+            <li><a class="tag p-category" href="../../categories/re/" rel="tag">re</a></li>
+        </ul></nav></aside><section class="comments hidden-print"><h2>Comments</h2>
+        
+        
+        <div id="disqus_thread"></div>
+        <script>
+        var disqus_shortname ="death-of-rats-github-io",
+            disqus_url="https://death-of-rats.github.io/posts/gdb-qemu-booting/",
+        disqus_title="0x08 Debug booting code in QEMU",
+        disqus_identifier="cache/posts/gdb-qemu-booting.html",
+        disqus_config = function () {
+            this.language = "en";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.async = true;
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+    <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section></article><script>var disqus_shortname="death-of-rats-github-io";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><!--End of body content--><footer id="footer">
+            Contents © 2019         death-of-rats - powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons Licence" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png"></a><br>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>. <br><img src="https://travis-ci.org/death-of-rats/death-of-rats.github.io.svg?branch=source"></footer>
+</div>
+</div>
+
+
+        <script src="../../assets/js/all-nocdn.js"></script><!-- fancy dates --><script>
+    moment.locale("en");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates --><script>
+    baguetteBox.run('a.reference:not(.islink)', {
+        captions: function(element) {
+            return element.getElementsByTagName('img')[0].alt;
+    }});
+    baguetteBox.run('img:not(.islink)', {
+        captions: function(element) {
+            return element.alt;
+    }});
+    </script>
+</body>
+</html>
