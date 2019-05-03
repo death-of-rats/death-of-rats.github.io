@@ -11,7 +11,8 @@
 <meta name="generator" content="Nikola (getnikola.com)">
 <link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
 <link rel="canonical" href="https://death-of-rats.github.io/">
-<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/yasm-libc-echo/" type="text/html">
+<link rel="next" href="index-1.html" type="text/html">
+<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/gdb-qemu-booting/" type="text/html">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -67,7 +68,29 @@
     
         
     <div class="postindex">
-            <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/yasm-libc-echo/" class="u-url">0x07 Yasm: Echo with libc.</a></h1>
+            <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/gdb-qemu-booting/" class="u-url">0x08 Debug booting code in QEMU</a></h1>
+                <div class="metadata">
+                    <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                        death-of-rats
+                    </span></p>
+                    <p class="dateline"><a href="posts/gdb-qemu-booting/" rel="bookmark"><time class="published dt-published" datetime="2019-05-03T00:00:00Z" title="2019-05-03 00:00">2019-05-03 00:00</time></a></p>
+                        <p class="commentline">
+        
+    <a href="posts/gdb-qemu-booting/#disqus_thread" data-disqus-identifier="cache/posts/gdb-qemu-booting.html">Comments</a>
+
+
+                </p>
+</div>
+            </header><div class="p-summary entry-summary">
+                    <div>
+<p>How to test and debug your own OS? For running one can use any of available
+emulators or VMs. I choose <strong>QEMU</strong>. But running isn't enough. Debugging is
+very important - at least for me. In this post, I will build the 'OS' image,
+run it and attach <strong>gdb</strong> for debugging.</p>
+<p class="more"><a href="posts/gdb-qemu-booting/">Read more…</a></p>
+</div>
+                </div>
+            </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/yasm-libc-echo/" class="u-url">0x07 Yasm: Echo with libc.</a></h1>
                 <div class="metadata">
                     <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                         death-of-rats
@@ -302,38 +325,13 @@ git subtree push --prefix output/ origin master
 <p>...<strong>SQUEAK</strong>!</p>
 </div>
                 </div>
-            </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/std%3A%3Amake_shared/" class="u-url">0x00 std::make_shared</a></h1>
-                <div class="metadata">
-                    <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
-                        death-of-rats
-                    </span></p>
-                    <p class="dateline"><a href="posts/std%3A%3Amake_shared/" rel="bookmark"><time class="published dt-published" datetime="2018-05-21T00:35:21Z" title="2018-05-21 00:35">2018-05-21 00:35</time></a></p>
-                        <p class="commentline">
-        
-    <a href="posts/std%3A%3Amake_shared/#disqus_thread" data-disqus-identifier="cache/posts/make_shared.html">Comments</a>
-
-
-                </p>
-</div>
-            </header><div class="p-summary entry-summary">
-                    <div>
-<h3>This is the place...</h3>
-<p>... where I dump my RAM - thoughts I don't want to lose. </p>
-<pre class="code literal-block"><span></span><span class="k">auto</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">Place</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">Blog</span><span class="o">&gt;</span><span class="p">();</span>
-</pre>
-
-
-<p>It's some start... not necessarily a good one.</p>
-<p>...<strong>SQUEAK</strong>!</p>
-</div>
-                </div>
             </article>
 </div>
     
-
-    
-        
-       <script>var disqus_shortname="death-of-rats-github-io";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><!--End of body content--><footer id="footer">
+        <ul class="pager postindexpager clearfix">
+<li class="next"><a href="index-1.html" rel="next">Older posts</a></li>
+        </ul>
+<script>var disqus_shortname="death-of-rats-github-io";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><!--End of body content--><footer id="footer">
             Contents © 2019         death-of-rats - powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         
 <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons Licence" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png"></a><br>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>. <br><img src="https://travis-ci.org/death-of-rats/death-of-rats.github.io.svg?branch=source"></footer>
 </div>
