@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="Bootloader which reads and shows boot disk parameters (CHS). ">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>0x09 Bootloader - read disk parameters | Death Of Rats</title>
+<link href="../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Playfair+Display:700,900" rel="stylesheet">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="canonical" href="https://death-of-rats.github.io/posts/bootloader-read-disk-parameters/">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="Bootloader which reads and shows boot disk parameters (CHS). ">
+<meta name="author" content="death-of-rats">
+<meta property="og:site_name" content="Death Of Rats">
+<meta property="og:title" content="0x09 Bootloader - read disk parameters">
+<meta property="og:url" content="https://death-of-rats.github.io/posts/bootloader-read-disk-parameters/">
+<meta property="og:description" content="Bootloader which reads and shows boot disk parameters (CHS). ">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2019-05-10T00:00:00Z">
+<meta property="article:tag" content="asm">
+<meta property="article:tag" content="os">
+<meta property="article:tag" content="qemu">
+<meta property="article:tag" content="re">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Header and menu bar -->
+<div class="container">
+      <header class="blog-header py-3"><div class="row nbb-header align-items-center">
+          <div class="col-md-3 col-xs-2 col-sm-2" style="width: auto;">
+            <button class="navbar-toggler navbar-light bg-light nbb-navbar-toggler" type="button" data-toggle="collapse" data-target=".bs-nav-collapsible" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse bs-nav-collapsible bootblog4-search-form-holder">
+                
+            </div>
+        </div>
+          <div class="col-md-6 col-xs-10 col-sm-10 bootblog4-brand" style="width: auto;">
+            <a class="navbar-brand blog-header-logo text-dark" href="https://death-of-rats.github.io/">
+
+            <span id="blog-title">Death Of Rats</span>
+        </a>
+          </div>
+            <div class="col-md-3 justify-content-end align-items-center bs-nav-collapsible collapse flex-collapse bootblog4-right-nav">
+            <nav class="navbar navbar-light bg-white"><ul class="navbar-nav bootblog4-right-nav">
+<li class="nav-item">
+    <a href="index.md" id="sourcelink" class="nav-link">Source</a>
+    </li>
+
+
+                    
+            </ul></nav>
+</div>
+    </div>
+</header><nav class="navbar navbar-expand-md navbar-light bg-white static-top"><div class="collapse navbar-collapse bs-nav-collapsible" id="bs-navbar">
+            <ul class="navbar-nav nav-fill d-flex w-100">
+<li class="nav-item">
+<a href="../../archive.html" class="nav-link">Archive</a>
+                </li>
+<li class="nav-item">
+<a href="../../categories/" class="nav-link">Tags</a>
+                </li>
+<li class="nav-item">
+<a href="../../rss.xml" class="nav-link">RSS feed</a>
+
+                
+            </li>
+</ul>
+</div>
+<!-- /.navbar-collapse -->
+</nav>
+</div>
+
+<div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        
+        
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">0x09 Bootloader - read disk parameters</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                    death-of-rats
+            </span></p>
+            <p class="dateline"><a href="." rel="bookmark"><time class="published dt-published" datetime="2019-05-10T00:00:00Z" itemprop="datePublished" title="2019-05-10 00:00">2019-05-10 00:00</time></a></p>
+                <p class="commentline">
+        
+    <a href="#disqus_thread" data-disqus-identifier="cache/posts/bootloader-read-disk-parameters.html">Comments</a>
+
+
+            
+        </p>
+<p class="sourceline"><a href="index.md" class="sourcelink">Source</a></p>
+
+        </div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>When BIOS finishes its job, it finds a bootable disk and loads the first sector
+- the first 512 bytes. The magic 0xaa55 is the value marking bootable 510
+bytes. But 510 bytes is not enough for a greedy programmer.</p>
+<!-- TEASER_END -->
+
+<p>BIOS handle the first sector. the rest of them we must load ourselves. To do
+this one must understand parameters of BIOS INT 0x13 interrupt. Nowadays the
+commonly used scheme for locating blocks of data on storage devices is <strong>LBA</strong>
+(Logical Block Addressing). It replaced the <strong>CHS</strong> (Cylinder-Head-Sector)
+scheme. As you may see CHS expose some technical details. BIOS of cors uses CHS
+in basic interruptions and LBA in extended ones. Knowledge is knowledge,
+knowing where our data is stored and converting this to <em>Cylinders</em>, <em>Heads</em>
+and <em>Sectors</em> is good for understanding this topic. </p>
+<p>BIOS leaves a little gift in <strong>dl</strong> register - the disk/drive index. To
+calculate proper values we must know disk parameters: how big is a sector, how
+many sectors are on track and heads in a cylinder. To get that information one
+may run <strong>ah</strong> = 0x08 or if available the extended version <strong>ah</strong> = 0x48
+<a href="https://en.wikipedia.org/wiki/INT_13H">[WI13]</a>. </p>
+<p>Lets try <strong>ah</strong> = 0x48, <strong>dl</strong> we have already, it leaves only a pointer
+(<strong>ds:si</strong>) to the structure to fill. If something goes bad <strong>cf</strong> register
+will be set and <strong>ah</strong> will have return code. Structure of the buffer has this
+informations:</p>
+<pre class="code literal-block"><span></span> *----------*
+ | 2 bytes  |  +0x00 size of this buffer = 0x1e   
+ *----------*
+ | 2 bytes  |  +0x02 flags
+ *----------*
+ | 4 bytes  |  +0x04 number of cylinders
+ *----------*
+ | 4 bytes  |  +0x08 number of heads/tracks
+ *----------*
+ | 4 bytes  |  +0x0c number of sectors per track
+ *----------*
+ | 8 bytes  |  +0x10 number of all sectors
+ *----------*
+ | 2 bytes  |  +0x18 sector size in bytes
+ *----------*
+ | 4 bytes  |  +0x1a pointer to EDD (Enhanced Disk Drives)
+ *----------* 
+ | 2 bytes  |  +0x1e 0x0BEDD - indicates presence of Device Path Information
+ *----------*
+ | 1 byte   |  +0x20 length of DPI with indicator
+ *----------*
+ | 1 byte   |  +0x21 reserved
+ *----------*
+ | 2 bytes  |  +0x22 reserved
+ *----------*
+ | 8 bytes  |  +0x24 host bus type ASCII
+ *----------*
+ | 8 bytes  |  +0x2c interface type ASCII
+ *----------*
+ | 8 bytes  |  +0x34 interface path
+ *----------*
+ | 8 bytes  |  +0x3c device path
+ *----------*
+ | 1 byte   |  +0x44 reserved
+ *----------*
+ | 1 byte   |  +0x45 checksum
+ *----------*
+</pre>
+
+
+<p>More details one can find in EDD specifications <a href="http://mbldr.sourceforge.net/specsedd30.pdf">[EDDS]</a>.</p>
+<p>PoC code shows what I was looking for.</p>
+<pre class="code literal-block"><span></span><span class="err">[</span><span class="nf">bits</span> <span class="mi">16</span><span class="p">]</span>
+<span class="err">[</span><span class="nf">org</span> <span class="mi">0x7c00</span><span class="p">]</span>
+<span class="c">; dl has drive number</span>
+
+    <span class="nf">xor</span> <span class="no">ax</span><span class="p">,</span> <span class="no">ax</span>
+    <span class="nf">mov</span> <span class="no">ds</span><span class="p">,</span> <span class="no">ax</span>
+    <span class="nf">mov</span> <span class="no">es</span><span class="p">,</span> <span class="no">ax</span>
+
+    <span class="nf">mov</span> <span class="no">si</span><span class="p">,</span> <span class="no">start_title</span>
+    <span class="nf">call</span> <span class="no">print</span>
+
+    <span class="nf">mov</span> <span class="no">si</span><span class="p">,</span> <span class="no">drive_title</span>
+    <span class="nf">call</span> <span class="no">print</span>
+
+    <span class="nf">xor</span> <span class="no">ax</span><span class="p">,</span> <span class="no">ax</span>
+    <span class="nf">mov</span> <span class="no">al</span><span class="p">,</span> <span class="no">dl</span>
+    <span class="nf">call</span> <span class="no">print_value</span>
+
+    <span class="nf">mov</span> <span class="no">ah</span><span class="p">,</span> <span class="mi">0x48</span>
+    <span class="nf">mov</span> <span class="no">si</span><span class="p">,</span> <span class="no">dps</span>
+    <span class="nf">int</span> <span class="mi">0x13</span>
+    <span class="nf">jc</span> <span class="no">disk_error</span>
+
+    <span class="nf">mov</span> <span class="no">si</span><span class="p">,</span> <span class="no">cylinders_title</span>
+    <span class="nf">call</span> <span class="no">print</span>
+    <span class="nf">lea</span> <span class="no">si</span><span class="p">,</span> <span class="p">[</span><span class="no">dps</span><span class="err">+</span><span class="mi">0x04</span><span class="p">]</span>
+    <span class="nf">mov</span> <span class="no">cx</span><span class="p">,</span> <span class="mi">2</span>
+    <span class="nf">call</span> <span class="no">print_structure_part</span>
+
+    <span class="nf">mov</span> <span class="no">si</span><span class="p">,</span> <span class="no">heads_title</span>
+    <span class="nf">call</span> <span class="no">print</span>
+    <span class="nf">lea</span> <span class="no">si</span><span class="p">,</span> <span class="p">[</span><span class="no">dps</span><span class="err">+</span><span class="mi">0x08</span><span class="p">]</span>
+    <span class="nf">mov</span> <span class="no">cx</span><span class="p">,</span> <span class="mi">2</span>
+    <span class="nf">call</span> <span class="no">print_structure_part</span>
+
+    <span class="nf">mov</span> <span class="no">si</span><span class="p">,</span> <span class="no">sectors_title</span>
+    <span class="nf">call</span> <span class="no">print</span>
+    <span class="nf">lea</span> <span class="no">si</span><span class="p">,</span> <span class="p">[</span><span class="no">dps</span><span class="err">+</span><span class="mi">0x0c</span><span class="p">]</span>
+    <span class="nf">mov</span> <span class="no">cx</span><span class="p">,</span> <span class="mi">0x02</span>
+    <span class="nf">call</span> <span class="no">print_structure_part</span>
+
+    <span class="nf">mov</span> <span class="no">si</span><span class="p">,</span> <span class="no">all_sectors_title</span>
+    <span class="nf">call</span> <span class="no">print</span>
+    <span class="nf">lea</span> <span class="no">si</span><span class="p">,</span> <span class="p">[</span><span class="no">dps</span><span class="err">+</span><span class="mi">0x10</span><span class="p">]</span>
+    <span class="nf">mov</span> <span class="no">cx</span><span class="p">,</span> <span class="mi">4</span>
+    <span class="nf">call</span> <span class="no">print_structure_part</span>
+
+    <span class="nf">mov</span> <span class="no">si</span><span class="p">,</span> <span class="no">sector_size_title</span>
+    <span class="nf">call</span> <span class="no">print</span>
+    <span class="nf">mov</span> <span class="no">ax</span><span class="p">,</span> <span class="p">[</span><span class="no">dps</span><span class="err">+</span><span class="mi">0x18</span><span class="p">]</span>
+    <span class="nf">call</span> <span class="no">print_value</span>
+
+    <span class="nf">mov</span> <span class="no">si</span><span class="p">,</span> <span class="no">new_line</span>
+    <span class="nf">call</span> <span class="no">print</span>
+    <span class="nf">lea</span> <span class="no">si</span><span class="p">,</span> <span class="p">[</span><span class="no">dps</span><span class="err">+</span><span class="mi">0x24</span><span class="p">]</span>
+    <span class="nf">call</span> <span class="no">print</span>
+
+    <span class="nf">jmp</span> <span class="no">$</span>
+
+<span class="nl">print_structure_part:</span>
+    <span class="nf">mov</span> <span class="no">dx</span><span class="p">,</span> <span class="no">cx</span>
+    <span class="nf">dec</span> <span class="no">dx</span>
+    <span class="nf">shl</span> <span class="no">dx</span><span class="p">,</span> <span class="mi">1</span>
+    <span class="nf">add</span> <span class="no">si</span><span class="p">,</span> <span class="no">dx</span>
+    <span class="nl">.loop:</span>
+    <span class="nf">lodsw</span>
+    <span class="nf">call</span> <span class="no">print_value</span>
+    <span class="nf">dec</span> <span class="no">cx</span>
+    <span class="nf">sub</span> <span class="no">si</span><span class="p">,</span> <span class="mi">0x04</span>
+    <span class="nf">cmp</span> <span class="no">cx</span><span class="p">,</span> <span class="mi">0x00</span>
+    <span class="nf">ja</span> <span class="no">.loop</span>
+    <span class="nf">ret</span>
+
+<span class="nl">disk_error:</span>
+    <span class="nf">push</span> <span class="no">ax</span>
+    <span class="nf">mov</span> <span class="no">si</span><span class="p">,</span> <span class="no">disk_error_msg</span>
+    <span class="nf">call</span> <span class="no">print</span>
+    <span class="nf">pop</span> <span class="no">ax</span>
+    <span class="nf">call</span> <span class="no">print_value</span>
+    <span class="nf">jmp</span> <span class="no">$</span>
+
+<span class="nl">print:</span>
+    <span class="nf">mov</span> <span class="no">ah</span><span class="p">,</span> <span class="mi">0x0e</span>
+    <span class="nl">.repeat_print:</span>
+    <span class="nf">lodsb</span>
+    <span class="nf">cmp</span> <span class="no">al</span><span class="p">,</span> <span class="mi">0</span>
+    <span class="nf">je</span> <span class="no">.done_print</span>
+    <span class="nf">int</span> <span class="mi">0x10</span>
+    <span class="nf">jmp</span> <span class="no">.repeat_print</span>
+    <span class="nl">.done_print:</span>
+    <span class="nf">ret</span>
+
+<span class="nl">print_value:</span>
+    <span class="nf">push</span> <span class="no">bx</span>
+    <span class="nf">push</span> <span class="no">cx</span>
+    <span class="nf">push</span> <span class="no">dx</span>
+    <span class="nf">mov</span> <span class="no">bh</span><span class="p">,</span> <span class="mi">0</span>
+    <span class="nf">mov</span> <span class="no">bl</span><span class="p">,</span> <span class="mi">15</span>
+    <span class="nf">mov</span> <span class="no">dx</span><span class="p">,</span> <span class="no">ax</span>
+    <span class="nf">mov</span> <span class="no">cx</span><span class="p">,</span> <span class="mi">0x10</span> <span class="c">; we want to print 16-bit value</span>
+    <span class="nl">.repeat_print_value:</span>
+    <span class="nf">sub</span> <span class="no">cx</span><span class="p">,</span> <span class="mi">0x04</span>
+    <span class="nf">mov</span> <span class="no">ax</span><span class="p">,</span> <span class="no">dx</span>
+    <span class="nf">shr</span> <span class="no">ax</span><span class="p">,</span> <span class="no">cl</span>
+    <span class="nf">and</span> <span class="no">ax</span><span class="p">,</span> <span class="mi">0x0f</span>
+    <span class="nf">cmp</span> <span class="no">ax</span><span class="p">,</span> <span class="mi">0x0a</span>
+    <span class="nf">jb</span> <span class="no">.decimal_pritnt_value</span>
+    <span class="nf">add</span> <span class="no">al</span><span class="p">,</span> <span class="no">char_A</span>
+    <span class="nf">jmp</span> <span class="no">.print_char_pritnt_value</span>
+    <span class="nl">.decimal_pritnt_value:</span>
+    <span class="nf">add</span> <span class="no">al</span><span class="p">,</span> <span class="no">char_0</span>
+    <span class="nl">.print_char_pritnt_value:</span>
+    <span class="nf">mov</span> <span class="no">ah</span><span class="p">,</span> <span class="mi">0x0e</span>
+    <span class="nf">int</span> <span class="mi">0x10</span>
+    <span class="nf">cmp</span> <span class="no">cx</span><span class="p">,</span> <span class="mi">0</span>
+    <span class="nf">je</span> <span class="no">.done_print_value</span>
+    <span class="nf">jmp</span> <span class="no">.repeat_print_value</span>
+    <span class="nl">.done_print_value:</span>
+    <span class="nf">pop</span> <span class="no">dx</span>
+    <span class="nf">pop</span> <span class="no">cx</span>
+    <span class="nf">pop</span> <span class="no">bx</span>
+    <span class="nf">ret</span>
+
+<span class="nf">char_0</span> <span class="no">equ</span> <span class="mi">0x30</span>
+<span class="nf">char_A</span> <span class="no">equ</span> <span class="mi">0x37</span>
+
+<span class="nf">start_title</span>         <span class="no">db</span> <span class="err">"</span><span class="no">OS</span> <span class="mi">0x03</span><span class="err">"</span><span class="p">,</span> <span class="mi">0xd</span><span class="p">,</span> <span class="mi">0xa</span><span class="p">,</span> <span class="mi">0x0</span>
+<span class="nf">cylinders_title</span>     <span class="no">db</span> <span class="mi">0xd</span><span class="p">,</span> <span class="mi">0xa</span><span class="p">,</span> <span class="err">"</span><span class="no">Cylinders</span><span class="p">:</span> <span class="err">"</span><span class="p">,</span> <span class="mi">0x0</span>
+<span class="nf">heads_title</span>         <span class="no">db</span> <span class="mi">0xd</span><span class="p">,</span> <span class="mi">0xa</span><span class="p">,</span> <span class="err">"</span><span class="no">Heads</span><span class="p">:</span> <span class="err">"</span><span class="p">,</span> <span class="mi">0x0</span>
+<span class="nf">sectors_title</span>       <span class="no">db</span> <span class="mi">0xd</span><span class="p">,</span> <span class="mi">0xa</span><span class="p">,</span> <span class="err">"</span><span class="no">Sectors</span><span class="p">:</span> <span class="err">"</span><span class="p">,</span> <span class="mi">0x0</span>
+<span class="nf">all_sectors_title</span>   <span class="no">db</span> <span class="mi">0xd</span><span class="p">,</span> <span class="mi">0xa</span><span class="p">,</span> <span class="err">"</span><span class="no">All</span> <span class="no">sectors</span><span class="p">:</span> <span class="err">"</span><span class="p">,</span> <span class="mi">0x0</span>
+<span class="nf">sector_size_title</span>   <span class="no">db</span> <span class="mi">0xd</span><span class="p">,</span> <span class="mi">0xa</span><span class="p">,</span> <span class="err">"</span><span class="no">Sector</span> <span class="no">size</span><span class="p">:</span> <span class="err">"</span><span class="p">,</span> <span class="mi">0x0</span>
+<span class="nf">drive_title</span>         <span class="no">db</span> <span class="mi">0xd</span><span class="p">,</span> <span class="mi">0xa</span><span class="p">,</span> <span class="err">"</span><span class="no">Drive</span> <span class="no">num</span><span class="p">:</span> <span class="err">"</span><span class="p">,</span> <span class="mi">0x0</span>
+<span class="nf">new_line</span>            <span class="no">db</span> <span class="mi">0xd</span><span class="p">,</span> <span class="mi">0xa</span><span class="p">,</span> <span class="mi">0x0</span>
+<span class="nf">disk_error_msg</span>      <span class="no">db</span> <span class="err">"</span><span class="no">Disk</span> <span class="no">error</span><span class="p">,</span> <span class="no">could</span> <span class="no">not</span> <span class="no">read</span> <span class="no">disk</span> <span class="no">parameters</span><span class="err">"</span><span class="p">,</span> <span class="mi">0xd</span><span class="p">,</span> <span class="mi">0xa</span><span class="p">,</span> <span class="mi">0x0</span>
+
+<span class="nf">dps</span>     <span class="no">dw</span>  <span class="mi">0x0042</span><span class="p">,</span>                         <span class="c">; size of structure</span>
+        <span class="nf">dw</span>  <span class="mi">0x0000</span><span class="p">,</span>                         <span class="c">; information flags</span>
+        <span class="nf">dw</span>  <span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span><span class="p">,</span>                  <span class="c">; physical num of cylinders</span>
+        <span class="nf">dw</span>  <span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span><span class="p">,</span>                  <span class="c">; physical num of heads</span>
+        <span class="nf">dw</span>  <span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span><span class="p">,</span>                  <span class="c">; physical num of sectors</span>
+        <span class="nf">dw</span>  <span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span><span class="p">,</span>    <span class="c">; absolute num of sectors</span>
+        <span class="nf">dw</span>  <span class="mi">0x0000</span><span class="p">,</span>                         <span class="c">; bytes per sector</span>
+        <span class="nf">dw</span>  <span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span>                   <span class="c">; optional pointer to EDD</span>
+        <span class="nf">dw</span>  <span class="mi">0x0000</span>                          <span class="c">; </span>
+        <span class="nf">dw</span>  <span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span>
+        <span class="nf">dw</span>  <span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span>                   <span class="c">; host bus type ASCII</span>
+        <span class="nf">dw</span>  <span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span>     <span class="c">; interface type ASCII</span>
+        <span class="nf">dw</span>  <span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span>     <span class="c">; interface path</span>
+        <span class="nf">dw</span>  <span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span>     <span class="c">; device path</span>
+        <span class="nf">dw</span>  <span class="mi">0x0000</span>                          <span class="c">; reserved + checksum</span>
+
+<span class="nf">times</span> <span class="p">(</span><span class="mi">0x200</span> <span class="p">-</span> <span class="mi">2</span> <span class="p">-</span> <span class="p">(</span><span class="no">$</span> <span class="p">-</span> <span class="no">$$</span><span class="p">))</span> <span class="no">db</span> <span class="mi">0x00</span>
+<span class="nf">dw</span> <span class="mi">0xaa55</span>
+</pre>
+
+
+<p>As always <em>Makefile</em> makes life easy. <em>gdb_init_real_mode.txt</em> I found at
+<a href="https://github.com/mhugo/gdb_init_real_mode">GitHub - mhugo/gdb_init_real_mode: GDB macros for real mode
+debugging</a>.</p>
+<pre class="code literal-block"><span></span><span class="nf">all</span><span class="o">:</span> <span class="n">os</span>03.<span class="n">bin</span>
+
+<span class="nf">os03.bin</span><span class="o">:</span> <span class="n">os</span>03.<span class="n">S</span>
+    yasm -f bin -o os03.bin os03.S
+
+<span class="nf">run</span><span class="o">:</span> <span class="n">os</span>03.<span class="n">bin</span>
+    qemu-system-i386 -drive <span class="nv">format</span><span class="o">=</span>raw,file<span class="o">=</span>os03.bin
+
+<span class="nf">debug</span><span class="o">:</span> <span class="n">os</span>03.<span class="n">bin</span>
+    qemu-system-i386 -S -gdb tcp::8000 -drive <span class="nv">format</span><span class="o">=</span>raw,file<span class="o">=</span>os03.bin <span class="p">&amp;</span>
+
+    gdb <span class="se">\</span>
+        -ix gdb_init_real_mode.txt <span class="se">\</span>
+        -ex <span class="s1">'target remote localhost:8000'</span> <span class="se">\</span>
+        -ex <span class="s1">'break *0x7c00'</span> <span class="se">\</span>
+        -ex <span class="s1">'continue'</span>
+
+<span class="nf">clean</span><span class="o">:</span>
+    rm -rf os03.bin
+</pre>
+
+
+<p>The bootloader produces this output:</p>
+<pre class="code literal-block"><span></span>OS 0x03
+
+Drive num: 0080
+Cylinders: 00000002
+Heads: 00000010
+Sectors: 0000003F
+All sectors: 0000000000000001
+Sector size: 0200
+PCI ATA       
+</pre>
+
+
+<p>Calculating and conversion is nicely described at <a href="https://en.wikipedia.org/wiki/Logical_block_addressing">[WLBA]</a>.</p>
+<h4>Bibliography:</h4>
+<ul>
+<li>[WI13] <a href="https://en.wikipedia.org/wiki/INT_13H">https://en.wikipedia.org/wiki/INT_13H</a>
+</li>
+<li>[EDDS] <a href="http://mbldr.sourceforge.net/specsedd30.pdf">http://mbldr.sourceforge.net/specsedd30.pdf</a>
+</li>
+<li>[WLBA] <a href="https://en.wikipedia.org/wiki/Logical_block_addressing">https://en.wikipedia.org/wiki/Logical_block_addressing</a>
+</li>
+</ul>
+<p> </p>
+<p><strong>...SQUEAK!</strong></p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../../categories/asm/" rel="tag">asm</a></li>
+            <li><a class="tag p-category" href="../../categories/os/" rel="tag">os</a></li>
+            <li><a class="tag p-category" href="../../categories/qemu/" rel="tag">qemu</a></li>
+            <li><a class="tag p-category" href="../../categories/re/" rel="tag">re</a></li>
+        </ul></nav></aside><section class="comments hidden-print"><h2>Comments</h2>
+        
+        
+        <div id="disqus_thread"></div>
+        <script>
+        var disqus_shortname ="death-of-rats-github-io",
+            disqus_url="https://death-of-rats.github.io/posts/bootloader-read-disk-parameters/",
+        disqus_title="0x09 Bootloader - read disk parameters",
+        disqus_identifier="cache/posts/bootloader-read-disk-parameters.html",
+        disqus_config = function () {
+            this.language = "en";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.async = true;
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+    <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section></article><script>var disqus_shortname="death-of-rats-github-io";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><!--End of body content--><footer id="footer">
+            Contents © 2019         death-of-rats - powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons Licence" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png"></a><br>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>. <br><img src="https://travis-ci.org/death-of-rats/death-of-rats.github.io.svg?branch=source"></footer>
+</div>
+</div>
+
+
+        <script src="../../assets/js/all-nocdn.js"></script><!-- fancy dates --><script>
+    moment.locale("en");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates --><script>
+    baguetteBox.run('a.reference:not(.islink)', {
+        captions: function(element) {
+            return element.getElementsByTagName('img')[0].alt;
+    }});
+    baguetteBox.run('img:not(.islink)', {
+        captions: function(element) {
+            return element.alt;
+    }});
+    </script>
+</body>
+</html>
