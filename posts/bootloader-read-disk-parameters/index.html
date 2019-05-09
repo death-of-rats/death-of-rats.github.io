@@ -122,43 +122,43 @@ may run <strong>ah</strong> = 0x08 or if available the extended version <strong>
 (<strong>ds:si</strong>) to the structure to fill. If something goes bad <strong>cf</strong> register
 will be set and <strong>ah</strong> will have return code. Structure of the buffer has this
 informations:</p>
-<pre class="code literal-block"><span></span> *----------*
- | 2 bytes  |  +0x00 size of this buffer = 0x1e   
- *----------*
- | 2 bytes  |  +0x02 flags
- *----------*
- | 4 bytes  |  +0x04 number of cylinders
- *----------*
- | 4 bytes  |  +0x08 number of heads/tracks
- *----------*
- | 4 bytes  |  +0x0c number of sectors per track
- *----------*
- | 8 bytes  |  +0x10 number of all sectors
- *----------*
- | 2 bytes  |  +0x18 sector size in bytes
- *----------*
- | 4 bytes  |  +0x1a pointer to EDD (Enhanced Disk Drives)
- *----------* 
- | 2 bytes  |  +0x1e 0x0BEDD - indicates presence of Device Path Information
- *----------*
- | 1 byte   |  +0x20 length of DPI with indicator
- *----------*
- | 1 byte   |  +0x21 reserved
- *----------*
- | 2 bytes  |  +0x22 reserved
- *----------*
- | 8 bytes  |  +0x24 host bus type ASCII
- *----------*
- | 8 bytes  |  +0x2c interface type ASCII
- *----------*
- | 8 bytes  |  +0x34 interface path
- *----------*
- | 8 bytes  |  +0x3c device path
- *----------*
- | 1 byte   |  +0x44 reserved
- *----------*
- | 1 byte   |  +0x45 checksum
- *----------*
+<pre class="code literal-block"><span></span> <span class="o">*</span><span class="c1">----------*</span>
+ <span class="o">|</span> <span class="mi">2</span> <span class="n">bytes</span>  <span class="o">|</span>  <span class="o">+</span><span class="mi">0</span><span class="n">x00</span> <span class="k">size</span> <span class="k">of</span> <span class="n">this</span> <span class="n">buffer</span> <span class="o">=</span> <span class="mi">0</span><span class="n">x1e</span>   
+ <span class="o">*</span><span class="c1">----------*</span>
+ <span class="o">|</span> <span class="mi">2</span> <span class="n">bytes</span>  <span class="o">|</span>  <span class="o">+</span><span class="mi">0</span><span class="n">x02</span> <span class="n">flags</span>
+ <span class="o">*</span><span class="c1">----------*</span>
+ <span class="o">|</span> <span class="mi">4</span> <span class="n">bytes</span>  <span class="o">|</span>  <span class="o">+</span><span class="mi">0</span><span class="n">x04</span> <span class="nb">number</span> <span class="k">of</span> <span class="n">cylinders</span>
+ <span class="o">*</span><span class="c1">----------*</span>
+ <span class="o">|</span> <span class="mi">4</span> <span class="n">bytes</span>  <span class="o">|</span>  <span class="o">+</span><span class="mi">0</span><span class="n">x08</span> <span class="nb">number</span> <span class="k">of</span> <span class="n">heads</span><span class="o">/</span><span class="n">tracks</span>
+ <span class="o">*</span><span class="c1">----------*</span>
+ <span class="o">|</span> <span class="mi">4</span> <span class="n">bytes</span>  <span class="o">|</span>  <span class="o">+</span><span class="mi">0</span><span class="n">x0c</span> <span class="nb">number</span> <span class="k">of</span> <span class="n">sectors</span> <span class="n">per</span> <span class="n">track</span>
+ <span class="o">*</span><span class="c1">----------*</span>
+ <span class="o">|</span> <span class="mi">8</span> <span class="n">bytes</span>  <span class="o">|</span>  <span class="o">+</span><span class="mi">0</span><span class="n">x10</span> <span class="nb">number</span> <span class="k">of</span> <span class="k">all</span> <span class="n">sectors</span>
+ <span class="o">*</span><span class="c1">----------*</span>
+ <span class="o">|</span> <span class="mi">2</span> <span class="n">bytes</span>  <span class="o">|</span>  <span class="o">+</span><span class="mi">0</span><span class="n">x18</span> <span class="n">sector</span> <span class="k">size</span> <span class="k">in</span> <span class="n">bytes</span>
+ <span class="o">*</span><span class="c1">----------*</span>
+ <span class="o">|</span> <span class="mi">4</span> <span class="n">bytes</span>  <span class="o">|</span>  <span class="o">+</span><span class="mi">0</span><span class="n">x1a</span> <span class="n">pointer</span> <span class="k">to</span> <span class="n">EDD</span> <span class="p">(</span><span class="n">Enhanced</span> <span class="n">Disk</span> <span class="n">Drives</span><span class="p">)</span>
+ <span class="o">*</span><span class="c1">----------* </span>
+ <span class="o">|</span> <span class="mi">2</span> <span class="n">bytes</span>  <span class="o">|</span>  <span class="o">+</span><span class="mi">0</span><span class="n">x1e</span> <span class="mi">0</span><span class="n">x0BEDD</span> <span class="o">-</span> <span class="n">indicates</span> <span class="n">presence</span> <span class="k">of</span> <span class="n">Device</span> <span class="n">Path</span> <span class="n">Information</span>
+ <span class="o">*</span><span class="c1">----------*</span>
+ <span class="o">|</span> <span class="mi">1</span> <span class="n">byte</span>   <span class="o">|</span>  <span class="o">+</span><span class="mi">0</span><span class="n">x20</span> <span class="k">length</span> <span class="k">of</span> <span class="n">DPI</span> <span class="k">with</span> <span class="n">indicator</span>
+ <span class="o">*</span><span class="c1">----------*</span>
+ <span class="o">|</span> <span class="mi">1</span> <span class="n">byte</span>   <span class="o">|</span>  <span class="o">+</span><span class="mi">0</span><span class="n">x21</span> <span class="n">reserved</span>
+ <span class="o">*</span><span class="c1">----------*</span>
+ <span class="o">|</span> <span class="mi">2</span> <span class="n">bytes</span>  <span class="o">|</span>  <span class="o">+</span><span class="mi">0</span><span class="n">x22</span> <span class="n">reserved</span>
+ <span class="o">*</span><span class="c1">----------*</span>
+ <span class="o">|</span> <span class="mi">8</span> <span class="n">bytes</span>  <span class="o">|</span>  <span class="o">+</span><span class="mi">0</span><span class="n">x24</span> <span class="k">host</span> <span class="n">bus</span> <span class="k">type</span> <span class="n">ASCII</span>
+ <span class="o">*</span><span class="c1">----------*</span>
+ <span class="o">|</span> <span class="mi">8</span> <span class="n">bytes</span>  <span class="o">|</span>  <span class="o">+</span><span class="mi">0</span><span class="n">x2c</span> <span class="n">interface</span> <span class="k">type</span> <span class="n">ASCII</span>
+ <span class="o">*</span><span class="c1">----------*</span>
+ <span class="o">|</span> <span class="mi">8</span> <span class="n">bytes</span>  <span class="o">|</span>  <span class="o">+</span><span class="mi">0</span><span class="n">x34</span> <span class="n">interface</span> <span class="n">path</span>
+ <span class="o">*</span><span class="c1">----------*</span>
+ <span class="o">|</span> <span class="mi">8</span> <span class="n">bytes</span>  <span class="o">|</span>  <span class="o">+</span><span class="mi">0</span><span class="n">x3c</span> <span class="n">device</span> <span class="n">path</span>
+ <span class="o">*</span><span class="c1">----------*</span>
+ <span class="o">|</span> <span class="mi">1</span> <span class="n">byte</span>   <span class="o">|</span>  <span class="o">+</span><span class="mi">0</span><span class="n">x44</span> <span class="n">reserved</span>
+ <span class="o">*</span><span class="c1">----------*</span>
+ <span class="o">|</span> <span class="mi">1</span> <span class="n">byte</span>   <span class="o">|</span>  <span class="o">+</span><span class="mi">0</span><span class="n">x45</span> <span class="n">checksum</span>
+ <span class="o">*</span><span class="c1">----------*</span>
 </pre>
 
 
@@ -347,15 +347,15 @@ debugging</a>.</p>
 
 
 <p>The bootloader produces this output:</p>
-<pre class="code literal-block"><span></span>OS 0x03
+<pre class="code literal-block"><span></span><span class="n">OS</span> <span class="mi">0</span><span class="n">x03</span>
 
-Drive num: 0080
-Cylinders: 00000002
-Heads: 00000010
-Sectors: 0000003F
-All sectors: 0000000000000001
-Sector size: 0200
-PCI ATA       
+<span class="n">Drive</span> <span class="n">num</span><span class="p">:</span> <span class="mi">0080</span>
+<span class="n">Cylinders</span><span class="p">:</span> <span class="mi">00000002</span>
+<span class="n">Heads</span><span class="p">:</span> <span class="mi">00000010</span>
+<span class="n">Sectors</span><span class="p">:</span> <span class="mi">0000003</span><span class="n">F</span>
+<span class="k">All</span> <span class="n">sectors</span><span class="p">:</span> <span class="mi">0000000000000001</span>
+<span class="n">Sector</span> <span class="k">size</span><span class="p">:</span> <span class="mi">0200</span>
+<span class="n">PCI</span> <span class="n">ATA</span>       
 </pre>
 
 

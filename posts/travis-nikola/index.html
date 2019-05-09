@@ -114,22 +114,22 @@ with your site and change some settings. I checked <em>Build only if .travis.yml
 pushed branches</em> and <em>Build pushed pull requests</em>. </p>
 <p>As the 'checkbox' says Travis will build only if <em>.travis.yml</em> is present. So add it to the repo! 
 Travis should do 2 things: build static files and deploy them to master. The first part should look like:</p>
-<pre class="code literal-block"><span></span><span class="n">language</span><span class="o">:</span> <span class="n">python</span>
-<span class="n">cache</span><span class="o">:</span> <span class="n">apt</span>
-<span class="n">sudo</span><span class="o">:</span> <span class="kc">false</span>
-<span class="n">addons</span><span class="o">:</span>
-  <span class="n">apt</span><span class="o">:</span>
-    <span class="n">packages</span><span class="o">:</span>
-    <span class="o">-</span> <span class="n">language</span><span class="o">-</span><span class="n">pack</span><span class="o">-</span><span class="n">en</span><span class="o">-</span><span class="n">base</span>
-<span class="n">python</span><span class="o">:</span>
-<span class="o">-</span> <span class="mf">3.6</span><span class="o">.</span><span class="mi">5</span>
-<span class="n">branches</span><span class="o">:</span>
-  <span class="n">except</span><span class="o">:</span>
-  <span class="o">-</span> <span class="n">master</span>
-<span class="n">install</span><span class="o">:</span>
-<span class="o">-</span> <span class="n">pip</span> <span class="n">install</span> <span class="s1">'Nikola[extras]'</span><span class="o">==</span><span class="mf">8.0</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="na">b2</span>
-<span class="n">script</span><span class="o">:</span>
-<span class="o">-</span> <span class="n">nikola</span> <span class="n">build</span> 
+<pre class="code literal-block"><span></span><span class="k">language</span><span class="err">:</span><span class="w"> </span><span class="n">python</span><span class="w"></span>
+<span class="nl">cache</span><span class="p">:</span><span class="w"> </span><span class="n">apt</span><span class="w"></span>
+<span class="nl">sudo</span><span class="p">:</span><span class="w"> </span><span class="k">false</span><span class="w"></span>
+<span class="nl">addons</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nl">apt</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nl">packages</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="k">language</span><span class="o">-</span><span class="n">pack</span><span class="o">-</span><span class="n">en</span><span class="o">-</span><span class="n">base</span><span class="w"></span>
+<span class="nl">python</span><span class="p">:</span><span class="w"></span>
+<span class="o">-</span><span class="w"> </span><span class="mf">3.6.5</span><span class="w"></span>
+<span class="nl">branches</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="ow">except</span><span class="err">:</span><span class="w"></span>
+<span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="n">master</span><span class="w"></span>
+<span class="nl">install</span><span class="p">:</span><span class="w"></span>
+<span class="o">-</span><span class="w"> </span><span class="n">pip</span><span class="w"> </span><span class="n">install</span><span class="w"> </span><span class="s1">'Nikola[extras]'</span><span class="o">==</span><span class="mf">8.0.0</span><span class="p">.</span><span class="n">b2</span><span class="w"></span>
+<span class="nl">script</span><span class="p">:</span><span class="w"></span>
+<span class="o">-</span><span class="w"> </span><span class="n">nikola</span><span class="w"> </span><span class="n">build</span><span class="w"> </span>
 </pre>
 
 
