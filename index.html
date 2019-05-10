@@ -12,7 +12,7 @@
 <link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
 <link rel="canonical" href="https://death-of-rats.github.io/">
 <link rel="next" href="index-1.html" type="text/html">
-<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/gdb-qemu-booting/" type="text/html">
+<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/bootloader-read-disk-parameters/" type="text/html">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -68,7 +68,28 @@
     
         
     <div class="postindex">
-            <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/gdb-qemu-booting/" class="u-url">0x08 Debug booting code in QEMU</a></h1>
+            <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/bootloader-read-disk-parameters/" class="u-url">0x09 Bootloader - read disk parameters</a></h1>
+                <div class="metadata">
+                    <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                        death-of-rats
+                    </span></p>
+                    <p class="dateline"><a href="posts/bootloader-read-disk-parameters/" rel="bookmark"><time class="published dt-published" datetime="2019-05-10T00:00:00Z" title="2019-05-10 00:00">2019-05-10 00:00</time></a></p>
+                        <p class="commentline">
+        
+    <a href="posts/bootloader-read-disk-parameters/#disqus_thread" data-disqus-identifier="cache/posts/bootloader-read-disk-parameters.html">Comments</a>
+
+
+                </p>
+</div>
+            </header><div class="p-summary entry-summary">
+                    <div>
+<p>When BIOS finishes its job, it finds a bootable disk and loads the first sector
+- the first 512 bytes. The magic 0xaa55 is the value marking bootable 510
+bytes. But 510 bytes is not enough for a greedy programmer.</p>
+<p class="more"><a href="posts/bootloader-read-disk-parameters/">Read more…</a></p>
+</div>
+                </div>
+            </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/gdb-qemu-booting/" class="u-url">0x08 Debug booting code in QEMU</a></h1>
                 <div class="metadata">
                     <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                         death-of-rats
@@ -279,50 +300,6 @@ to the <code>master</code>. And what if I'm not at my computer, what if I must c
 nice if something could do this build and deploy the stuff for me.</p>
 <p>That is why I invite...</p>
 <p class="more"><a href="posts/travis-nikola/">Read more…</a></p>
-</div>
-                </div>
-            </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/github-%2B-nikola/" class="u-url">0x01 github + nikola</a></h1>
-                <div class="metadata">
-                    <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
-                        death-of-rats
-                    </span></p>
-                    <p class="dateline"><a href="posts/github-%2B-nikola/" rel="bookmark"><time class="published dt-published" datetime="2018-05-21T07:00:30Z" title="2018-05-21 07:00">2018-05-21 07:00</time></a></p>
-                        <p class="commentline">
-        
-    <a href="posts/github-%2B-nikola/#disqus_thread" data-disqus-identifier="cache/posts/github-+-nikola.html">Comments</a>
-
-
-                </p>
-</div>
-            </header><div class="p-summary entry-summary">
-                    <div>
-<p>How to start GitHub repo for hosting pages with Nikola. I want a branch (let us name it <code>source</code>) where I will keep my project. I plan to generate static files to some folder and push it to the <code>master</code> branch. In other words, <code>master</code> branch will have my site and <code>source</code> branch will have the whole Nikola engine with my source files.</p>
-<p>I need to create new repo: <em><username>.github.io</username></em> on GitHub page. Next, I will clone it to the local folder, make my branch and push it.</p>
-<pre class="code literal-block"><span></span>git clone git@github.com:death-of-rats/death-of-rats.github.io.git
-<span class="nb">cd</span> death-of-rats.github.io.git
-git commit --allow-empty -am <span class="s2">"start using repo"</span>
-git branch <span class="nb">source</span>
-git checkout <span class="nb">source</span>
-git push --set-upstream origin <span class="nb">source</span>
-</pre>
-
-
-<p>And I have the empty repo with 2 branches.</p>
-<p>Now I init the Nikola project in repo root folder (on branch <code>source</code>). Nikola will produce html files to the <code>output</code> folder so I need, after the first test run, split subtree for that folder and push it to <code>master</code>:</p>
-<pre class="code literal-block"><span></span>git push origin <span class="sb">`</span>git subtree split --prefix output/ master<span class="sb">`</span>:master --force
-</pre>
-
-
-<p>It's almost done. Manual deploy command may look like this:</p>
-<pre class="code literal-block"><span></span>git add -A
-git commit -m <span class="s2">"&lt;deploy message for commit&gt;"</span> -S
-git push origin <span class="nb">source</span>
-git subtree push --prefix output/ origin master
-</pre>
-
-
-<p>What have I missed? I didn't add <code>.gitignore</code>...</p>
-<p>...<strong>SQUEAK</strong>!</p>
 </div>
                 </div>
             </article>
