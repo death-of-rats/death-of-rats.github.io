@@ -274,7 +274,7 @@ PCI ATA
 Calculating and conversion is nicely described at [[WLBA]](https://en.wikipedia.org/wiki/Logical_block_addressing).
 
 
-### Bibliography:
+### References:
 
 * [WI13] [https://en.wikipedia.org/wiki/INT_13H](https://en.wikipedia.org/wiki/INT_13H)
 * [EDDS] [http://mbldr.sourceforge.net/specsedd30.pdf](http://mbldr.sourceforge.net/specsedd30.pdf)

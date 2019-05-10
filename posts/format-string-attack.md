@@ -278,7 +278,7 @@ But, should bad code looks pretty...
 
 &nbsp; 
 
-### Bibliography:
+### References:
 
 - [EFSV] [Exploiting Format String Vulnerabilities (2001)](https://crypto.stanford.edu/cs155old/cs155-spring08/papers/formatstring-1.2.pdf)
 - [CCnv] [Calling Conventions - Wikipedia article](https://en.wikipedia.org/wiki/X86_calling_conventions)
