@@ -12,7 +12,7 @@
 <link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
 <link rel="canonical" href="https://death-of-rats.github.io/">
 <link rel="next" href="index-1.html" type="text/html">
-<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><script src="//s3-us-west-2.amazonaws.com/momently-static/loader/T90b7gA0ARA_momently.js" name="momently-script"></script><link rel="prefetch" href="posts/protected-mode/" type="text/html">
+<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><script src="//s3-us-west-2.amazonaws.com/momently-static/loader/T90b7gA0ARA_momently.js" name="momently-script"></script><link rel="prefetch" href="posts/bootloader-read-disk-parameters/" type="text/html">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -68,29 +68,7 @@
     
         
     <div class="postindex">
-            <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/protected-mode/" class="u-url">0x0A Protected mode</a></h1>
-                <div class="metadata">
-                    <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
-                        death-of-rats
-                    </span></p>
-                    <p class="dateline"><a href="posts/protected-mode/" rel="bookmark"><time class="published dt-published" datetime="2019-06-10T00:00:00Z" title="2019-06-10 00:00">2019-06-10 00:00</time></a></p>
-                        <p class="commentline">
-        
-    <a href="posts/protected-mode/#disqus_thread" data-disqus-identifier="cache/posts/protected-mode.html">Comments</a>
-
-
-                </p>
-</div>
-            </header><div class="p-summary entry-summary">
-                    <div>
-<p>When our bootloader takes control it runs 16-bit <em>Real mode</em>. In this mode a
-program has access to 1MB of RAM. So honest operating system should switch to 
-<em>Protected mode</em> to make use of 32-bit addressing space. In bonus we get memory
-features such as <em>Segmented</em> or <em>Paged memory</em>.</p>
-<p class="more"><a href="posts/protected-mode/">Read more…</a></p>
-</div>
-                </div>
-            </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/bootloader-read-disk-parameters/" class="u-url">0x09 Bootloader - read disk parameters</a></h1>
+            <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/bootloader-read-disk-parameters/" class="u-url">0x09 Bootloader - read disk parameters</a></h1>
                 <div class="metadata">
                     <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                         death-of-rats
@@ -299,6 +277,29 @@ I built the library from the source
 <p>To try the new toy I choose this <a href="https://github.com/Microsoft/cpprestsdk/blob/master/Release/samples/BingRequest/bingrequest.cpp">sample</a>.
 </p>
 <p class="more"><a href="posts/building-cpprest-sample/">Read more…</a></p>
+</div>
+                </div>
+            </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/travis-nikola/" class="u-url">0x02 travis + nikola</a></h1>
+                <div class="metadata">
+                    <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                        death-of-rats
+                    </span></p>
+                    <p class="dateline"><a href="posts/travis-nikola/" rel="bookmark"><time class="published dt-published" datetime="2018-05-25T00:00:00Z" title="2018-05-25 00:00">2018-05-25 00:00</time></a></p>
+                        <p class="commentline">
+        
+    <a href="posts/travis-nikola/#disqus_thread" data-disqus-identifier="cache/posts/travis-nikola.html">Comments</a>
+
+
+                </p>
+</div>
+            </header><div class="p-summary entry-summary">
+                    <div>
+<p>One has running Nikola. One stores all ones work on GitHub and hosts it on the GitHub Pages. Nice. But 
+do I really need to push my changes to the repo, and when I'm ready, build static pages and push them 
+to the <code>master</code>. And what if I'm not at my computer, what if I must change some typo. It would be 
+nice if something could do this build and deploy the stuff for me.</p>
+<p>That is why I invite...</p>
+<p class="more"><a href="posts/travis-nikola/">Read more…</a></p>
 </div>
                 </div>
             </article>
