@@ -85,27 +85,27 @@
                     <div>
 <p>How to start GitHub repo for hosting pages with Nikola. I want a branch (let us name it <code>source</code>) where I will keep my project. I plan to generate static files to some folder and push it to the <code>master</code> branch. In other words, <code>master</code> branch will have my site and <code>source</code> branch will have the whole Nikola engine with my source files.</p>
 <p>I need to create new repo: <em><username>.github.io</username></em> on GitHub page. Next, I will clone it to the local folder, make my branch and push it.</p>
-<pre class="code literal-block"><span></span>git clone git@github.com:death-of-rats/death-of-rats.github.io.git
+<pre class="code literal-block"><span></span><code>git clone git@github.com:death-of-rats/death-of-rats.github.io.git
 <span class="nb">cd</span> death-of-rats.github.io.git
 git commit --allow-empty -am <span class="s2">"start using repo"</span>
 git branch <span class="nb">source</span>
 git checkout <span class="nb">source</span>
 git push --set-upstream origin <span class="nb">source</span>
-</pre>
+</code></pre>
 
 
 <p>And I have the empty repo with 2 branches.</p>
 <p>Now I init the Nikola project in repo root folder (on branch <code>source</code>). Nikola will produce html files to the <code>output</code> folder so I need, after the first test run, split subtree for that folder and push it to <code>master</code>:</p>
-<pre class="code literal-block"><span></span>git push origin <span class="sb">`</span>git subtree split --prefix output/ master<span class="sb">`</span>:master --force
-</pre>
+<pre class="code literal-block"><span></span><code>git push origin <span class="sb">`</span>git subtree split --prefix output/ master<span class="sb">`</span>:master --force
+</code></pre>
 
 
 <p>It's almost done. Manual deploy command may look like this:</p>
-<pre class="code literal-block"><span></span>git add -A
+<pre class="code literal-block"><span></span><code>git add -A
 git commit -m <span class="s2">"&lt;deploy message for commit&gt;"</span> -S
 git push origin <span class="nb">source</span>
 git subtree push --prefix output/ origin master
-</pre>
+</code></pre>
 
 
 <p>What have I missed? I didn't add <code>.gitignore</code>...</p>
@@ -129,8 +129,8 @@ git subtree push --prefix output/ origin master
                     <div>
 <h3>This is the place...</h3>
 <p>... where I dump my RAM - thoughts I don't want to lose. </p>
-<pre class="code literal-block"><span></span><span class="k">auto</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">Place</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">Blog</span><span class="o">&gt;</span><span class="p">();</span>
-</pre>
+<pre class="code literal-block"><span></span><code><span class="k">auto</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">Place</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">Blog</span><span class="o">&gt;</span><span class="p">();</span>
+</code></pre>
 
 
 <p>It's some start... not necessarily a good one.</p>

@@ -109,7 +109,7 @@ run it and attach <strong>gdb</strong> for debugging.</p>
 <!-- TEASER_END -->
 
 <p>First things first. Let's check our 'OS' example.</p>
-<pre class="code literal-block"><span></span><span class="c">; os00.asm</span>
+<pre class="code literal-block"><span></span><code><span class="c">; os00.asm</span>
 <span class="err">[</span><span class="nf">bits</span> <span class="mi">16</span><span class="p">]</span>
 <span class="err">[</span><span class="nf">org</span> <span class="mi">0x7c00</span><span class="p">]</span>
 
@@ -137,28 +137,28 @@ run it and attach <strong>gdb</strong> for debugging.</p>
 
   <span class="nf">times</span> <span class="p">(</span><span class="mi">510</span> <span class="p">-</span> <span class="p">(</span><span class="no">$</span> <span class="p">-</span> <span class="no">$$</span><span class="p">))</span> <span class="no">db</span> <span class="mi">0x00</span>
   <span class="nf">dw</span> <span class="mi">0xAA55</span>
-</pre>
+</code></pre>
 
 
 <p>Now build <em>.bin</em> image. </p>
-<pre class="code literal-block"><span></span>$ yasm -f bin -o os00.bin os00.asm
-</pre>
+<pre class="code literal-block"><span></span><code>$ yasm -f bin -o os00.bin os00.asm
+</code></pre>
 
 
 <p><em>.bin</em> format cannot contain debug symbols so no <code>-g dwarf2</code>.</p>
 <p>And run the image in the emulator:</p>
-<pre class="code literal-block"><span></span>$ qemu-system-i368 os00.bin
+<pre class="code literal-block"><span></span><code>$ qemu-system-i368 os00.bin
 
 WARNING: Image format was not specified <span class="k">for</span> <span class="s1">'os00.bin'</span> and probing guessed raw.
          Automatically detecting the format is dangerous <span class="k">for</span> raw images, write
          operations on block <span class="m">0</span> will be restricted.
          Specify the <span class="s1">'raw'</span> format explicitly to remove the restrictions.
-</pre>
+</code></pre>
 
 
 <p>Nice, but still some warnings. So, after reading some man pages, let's try this way.</p>
-<pre class="code literal-block"><span></span>$ qemu-system-i386 -drive <span class="nv">format</span><span class="o">=</span>raw,file<span class="o">=</span>os00.bin
-</pre>
+<pre class="code literal-block"><span></span><code>$ qemu-system-i386 -drive <span class="nv">format</span><span class="o">=</span>raw,file<span class="o">=</span>os00.bin
+</code></pre>
 
 
 <p>Now it's time to debug. What we need is to run <strong>QEMU</strong> and wait for <strong>gdb</strong>.
@@ -169,7 +169,7 @@ port for <strong>gdb</strong> connection. Instead <code>-gdb</code> you could us
 's') which is short for <code>-gdb tcp::1234</code>. As I mentioned earlier <em>.bin</em>
 doesn't have debug information so there is no need to run <strong>gdb</strong> with
 <em>os00.bin</em>.</p>
-<pre class="code literal-block"><span></span>$ qemu-system-i386 -S -gdb tcp::8000 -drive <span class="nv">format</span><span class="o">=</span>raw,file<span class="o">=</span>os00.bin
+<pre class="code literal-block"><span></span><code>$ qemu-system-i386 -S -gdb tcp::8000 -drive <span class="nv">format</span><span class="o">=</span>raw,file<span class="o">=</span>os00.bin
 <span class="o">[</span><span class="m">1</span><span class="o">]</span> <span class="m">44444</span>
 $ gdb
  ...
@@ -250,7 +250,7 @@ LEGEND: STACK <span class="p">|</span> HEAP <span class="p">|</span> CODE <span 
  ► f <span class="m">0</span>     7c00
 Breakpoint *0x7c00
 pwndbg&gt;
-</pre>
+</code></pre>
 
 
 <p>As you can see, there is some mismatch in disassembled code after <code>mov ebx,
@@ -263,7 +263,7 @@ one could use debug symbols during debugging.</p>
 <p>From the code I need to throw away <code>org</code> as it is not allowed in <em>elf</em>,
 the linker will take this address. Next, we build <em>elf</em>, linked, <em>objcopy</em> binaries
 to <em>.img</em> and run <strong>gdb</strong> with symbols from <em>.elf</em>.  </p>
-<pre class="code literal-block"><span></span>$ yasm -f elf32 -g dwarf2 os00_v2.asm -o os00_v2.o
+<pre class="code literal-block"><span></span><code>$ yasm -f elf32 -g dwarf2 os00_v2.asm -o os00_v2.o
 $ ld -Ttext<span class="o">=</span>0x7c00 -melf_i386 os00_v2.o -o os00_v2.elf
 ld: warning: cannot find entry symbol _start<span class="p">;</span> defaulting to 0000000000007c00
 $ objcopy -O binary os00_v2.elf os00_v2.img
@@ -329,11 +329,11 @@ In file: /home/jurek/Projects/os/os00/os00_v2.asm
  ► f <span class="m">0</span>     7c00
 Breakpoint *0x7c00
 pwndbg&gt;
-</pre>
+</code></pre>
 
 
 <p>Somewhat better. What if I try to disassemble <em>.bin</em> file with objdump?</p>
-<pre class="code literal-block"><span></span>$ objdump -D -b binary -mi8086 -Maddr16,data16 os00.bin
+<pre class="code literal-block"><span></span><code>$ objdump -D -b binary -mi8086 -Maddr16,data16 os00.bin
 
 os00.bin:     file format binary
 
@@ -368,7 +368,7 @@ Disassembly of section .data:
  1fe:   <span class="m">55</span>                      push   %bp
  1ff:   aa                      stos   %al,%es:<span class="o">(</span>%di<span class="o">)</span>
 $ 
-</pre>
+</code></pre>
 
 
 <p>Close... Maybe I need to align my code...</p>

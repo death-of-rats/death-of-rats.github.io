@@ -110,7 +110,7 @@ the program will handle only <em>GET</em> and <em>POST</em>. When the listener s
 loop is very simple, we just <code>while</code> infinitely.</p>
 <!-- TEASER_END -->
 
-<pre class="code literal-block"><span></span><span class="cp">#include</span> <span class="cpf">&lt;cpprest/http_listener.h&gt;</span><span class="cp"></span>
+<pre class="code literal-block"><span></span><code><span class="cp">#include</span> <span class="cpf">&lt;cpprest/http_listener.h&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;cpprest/json.h&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
@@ -162,12 +162,12 @@ loop is very simple, we just <code>while</code> infinitely.</p>
 
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
-</pre>
+</code></pre>
 
 
 <p>To build this code I use CMake with configuration from last post 
 [<a href="../building-cpprest-sample/">0x03 building cpprest sample</a>]. </p>
-<pre class="code literal-block"><span></span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span> <span class="s">3.7</span><span class="p">)</span>
+<pre class="code literal-block"><span></span><code><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span> <span class="s">3.7</span><span class="p">)</span>
 <span class="nb">project</span><span class="p">(</span><span class="s">simargl</span> <span class="s">C</span> <span class="s">CXX</span><span class="p">)</span>
 <span class="nb">set</span> <span class="p">(</span><span class="s">simargl_VERSION_MAJOR</span> <span class="s">0</span><span class="p">)</span>
 <span class="nb">set</span> <span class="p">(</span><span class="s">simargl_VERSION_MINOR</span> <span class="s">1</span><span class="p">)</span>
@@ -188,24 +188,24 @@ loop is very simple, we just <code>while</code> infinitely.</p>
 <span class="c">#message("OpenSSL libs:" ${OPENSSL_LIBRARIES})</span>
 <span class="c">#message("Boost libs :" ${Boost_LIBRARIES})</span>
 <span class="c">#message("CppRest libs :" ${cpprestsdk_LIBRARIES})</span>
-</pre>
+</code></pre>
 
 
 <p>The build goes flawlessly. To test the cpprest listener run the program and try a few curl commands:</p>
-<pre class="code literal-block"><span></span>$ curl http://localhost:9000/demo
-</pre>
+<pre class="code literal-block"><span></span><code>$ curl http://localhost:9000/demo
+</code></pre>
 
 
-<pre class="code literal-block"><span></span><span class="err">{"name":"death of rats","version":"0.0.1"}</span>
-</pre>
+<pre class="code literal-block"><span></span><code><span class="err">{"name":"death of rats","version":"0.0.1"}</span>
+</code></pre>
 
 
-<pre class="code literal-block"><span></span>$ curl --request POST --data <span class="s1">'{"label":"value"}'</span> -H <span class="s2">"Content-Type: application/json"</span>  http://localhost:9000/demo
-</pre>
+<pre class="code literal-block"><span></span><code>$ curl --request POST --data <span class="s1">'{"label":"value"}'</span> -H <span class="s2">"Content-Type: application/json"</span>  http://localhost:9000/demo
+</code></pre>
 
 
-<pre class="code literal-block"><span></span><span class="err">{"label":"value"}</span>
-</pre>
+<pre class="code literal-block"><span></span><code><span class="err">{"label":"value"}</span>
+</code></pre>
 
 
 <p>What have I learned? If one is looking for examples, one should look up tests...</p>

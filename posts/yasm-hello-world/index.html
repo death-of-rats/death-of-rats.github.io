@@ -109,7 +109,7 @@ and OS X" by Ray Seyfarth.</p>
 <p>What I remember from old asm, are sections: <code>.text</code> section for code and
 <code>.data</code> for data. </p>
 <p>Let us start with 'the simplest' example:</p>
-<pre class="code literal-block"><span></span><span class="c">;asm00.s</span>
+<pre class="code literal-block"><span></span><code><span class="c">;asm00.s</span>
 
 <span class="nf">section</span> <span class="no">.data</span>
     <span class="nf">msg</span>       <span class="no">db</span>     <span class="err">'</span><span class="no">Hello</span> <span class="no">world</span><span class="p">!</span><span class="err">'</span>
@@ -127,20 +127,20 @@ and OS X" by Ray Seyfarth.</p>
     <span class="nf">mov</span> <span class="no">rax</span><span class="p">,</span> <span class="mi">60</span>
     <span class="nf">mov</span> <span class="no">rdi</span><span class="p">,</span> <span class="mi">0</span>
     <span class="nf">syscall</span>
-</pre>
+</code></pre>
 
 
 <p>To build this code one must run <strong>yasm</strong> assembler and <strong>ld</strong> linker:</p>
-<pre class="code literal-block"><span></span>$ yasm -f elf64 asm00.s
+<pre class="code literal-block"><span></span><code>$ yasm -f elf64 asm00.s
 $ ld -o asm00 asm00.o
-</pre>
+</code></pre>
 
 
 <p>And the effect:</p>
-<pre class="code literal-block"><span></span>$ ./asm00
+<pre class="code literal-block"><span></span><code>$ ./asm00
 Hello world!
 $ 
-</pre>
+</code></pre>
 
 
 <p>Ok, so what happens here? We have here 2 calls to the <em>syscall</em>. The first

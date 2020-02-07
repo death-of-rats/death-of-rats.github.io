@@ -123,7 +123,7 @@ may run <strong>ah</strong> = 0x08 or if available the extended version <strong>
 (<strong>ds:si</strong>) to the structure to fill. If something goes bad <strong>cf</strong> register
 will be set and <strong>ah</strong> will have return code. Structure of the buffer has this
 informations:</p>
-<pre class="code literal-block"><span></span><span class="err"> *----------*</span>
+<pre class="code literal-block"><span></span><code><span class="err"> *----------*</span>
 <span class="err"> | 2 bytes  |  +0x00 size of this buffer = 0x1e   </span>
 <span class="err"> *----------*</span>
 <span class="err"> | 2 bytes  |  +0x02 flags</span>
@@ -160,12 +160,12 @@ informations:</p>
 <span class="err"> *----------*</span>
 <span class="err"> | 1 byte   |  +0x45 checksum</span>
 <span class="err"> *----------*</span>
-</pre>
+</code></pre>
 
 
 <p>More details one can find in EDD specifications <a href="http://mbldr.sourceforge.net/specsedd30.pdf">[EDDS]</a>.</p>
 <p>PoC code shows what I was looking for.</p>
-<pre class="code literal-block"><span></span><span class="err">[</span><span class="nf">bits</span> <span class="mi">16</span><span class="p">]</span>
+<pre class="code literal-block"><span></span><code><span class="err">[</span><span class="nf">bits</span> <span class="mi">16</span><span class="p">]</span>
 <span class="err">[</span><span class="nf">org</span> <span class="mi">0x7c00</span><span class="p">]</span>
 <span class="c">; dl has drive number</span>
 
@@ -319,13 +319,13 @@ informations:</p>
 
 <span class="nf">times</span> <span class="p">(</span><span class="mi">0x200</span> <span class="p">-</span> <span class="mi">2</span> <span class="p">-</span> <span class="p">(</span><span class="no">$</span> <span class="p">-</span> <span class="no">$$</span><span class="p">))</span> <span class="no">db</span> <span class="mi">0x00</span>
 <span class="nf">dw</span> <span class="mi">0xaa55</span>
-</pre>
+</code></pre>
 
 
 <p>As always <em>Makefile</em> makes life easy. <em>gdb_init_real_mode.txt</em> I found at
 <a href="https://github.com/mhugo/gdb_init_real_mode">GitHub - mhugo/gdb_init_real_mode: GDB macros for real mode
 debugging</a>.</p>
-<pre class="code literal-block"><span></span><span class="nf">all</span><span class="o">:</span> <span class="n">os</span>03.<span class="n">bin</span>
+<pre class="code literal-block"><span></span><code><span class="nf">all</span><span class="o">:</span> <span class="n">os</span>03.<span class="n">bin</span>
 
 <span class="nf">os03.bin</span><span class="o">:</span> <span class="n">os</span>03.<span class="n">S</span>
     yasm -f bin -o os03.bin os03.S
@@ -344,11 +344,11 @@ debugging</a>.</p>
 
 <span class="nf">clean</span><span class="o">:</span>
     rm -rf os03.bin
-</pre>
+</code></pre>
 
 
 <p>The bootloader produces this output:</p>
-<pre class="code literal-block"><span></span><span class="n">OS</span> <span class="mi">0</span><span class="n">x03</span>
+<pre class="code literal-block"><span></span><code><span class="n">OS</span> <span class="mi">0</span><span class="n">x03</span>
 
 <span class="n">Drive</span> <span class="n">num</span><span class="p">:</span> <span class="mi">0080</span>
 <span class="n">Cylinders</span><span class="p">:</span> <span class="mi">00000002</span>
@@ -357,7 +357,7 @@ debugging</a>.</p>
 <span class="k">All</span> <span class="n">sectors</span><span class="p">:</span> <span class="mi">0000000000000001</span>
 <span class="n">Sector</span> <span class="k">size</span><span class="p">:</span> <span class="mi">0200</span>
 <span class="n">PCI</span> <span class="n">ATA</span>       
-</pre>
+</code></pre>
 
 
 <p>Calculating and conversion is nicely described at <a href="https://en.wikipedia.org/wiki/Logical_block_addressing">[WLBA]</a>.</p>

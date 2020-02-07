@@ -110,24 +110,24 @@ I built the library from the source
 <!-- TEASER_END -->
 For the test, I will rename the source file to <code>main.cpp</code>. Let us create CMakeLists.txt. The readme of 
 the project gives us the example:</p>
-<pre class="code literal-block"><span></span>cmake_minimum_required<span class="o">(</span>VERSION <span class="m">3</span>.7<span class="o">)</span>
+<pre class="code literal-block"><span></span><code>cmake_minimum_required<span class="o">(</span>VERSION <span class="m">3</span>.7<span class="o">)</span>
 project<span class="o">(</span>main<span class="o">)</span>
 
 find_package<span class="o">(</span>cpprestsdk REQUIRED<span class="o">)</span>
 
 add_executable<span class="o">(</span>main main.cpp<span class="o">)</span>
 target_link_libraries<span class="o">(</span>main PRIVATE cpprestsdk::cpprest<span class="o">)</span>
-</pre>
+</code></pre>
 
 
 <p>I know this is the time of trial:</p>
-<pre class="code literal-block"><span></span>$ mkdir build
+<pre class="code literal-block"><span></span><code>$ mkdir build
 $ <span class="nb">cd</span> build
 $ cmake ..
-</pre>
+</code></pre>
 
 
-<pre class="code literal-block"><span></span><span class="err"> -- The C compiler identification is GNU 7.3.0</span>
+<pre class="code literal-block"><span></span><code><span class="err"> -- The C compiler identification is GNU 7.3.0</span>
 <span class="err"> -- The CXX compiler identification is GNU 7.3.0</span>
 <span class="err"> -- Check for working C compiler: /usr/bin/cc</span>
 <span class="err"> -- Check for working C compiler: /usr/bin/cc -- works</span>
@@ -146,14 +146,14 @@ $ cmake ..
 <span class="err"> -- Configuring done</span>
 <span class="err"> -- Generating done</span>
 <span class="err"> -- Build files have been written to: ~/Projects/cpprest01/build</span>
-</pre>
+</code></pre>
 
 
-<pre class="code literal-block"><span></span>$ make
-</pre>
+<pre class="code literal-block"><span></span><code>$ make
+</code></pre>
 
 
-<pre class="code literal-block"><span></span><span class="w"> </span><span class="n">Scanning</span><span class="w"> </span><span class="n">dependencies</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="n">main</span><span class="w"></span>
+<pre class="code literal-block"><span></span><code><span class="w"> </span><span class="n">Scanning</span><span class="w"> </span><span class="n">dependencies</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="n">main</span><span class="w"></span>
 <span class="w"> </span><span class="o">[</span><span class="n"> 50%</span><span class="o">]</span><span class="w"> </span><span class="n">Building</span><span class="w"> </span><span class="n">CXX</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="n">CMakeFiles</span><span class="o">/</span><span class="n">main</span><span class="p">.</span><span class="n">dir</span><span class="o">/</span><span class="n">main</span><span class="p">.</span><span class="n">cpp</span><span class="p">.</span><span class="n">o</span><span class="w"></span>
 <span class="w"> </span><span class="o">[</span><span class="n">100%</span><span class="o">]</span><span class="w"> </span><span class="n">Linking</span><span class="w"> </span><span class="n">CXX</span><span class="w"> </span><span class="n">executable</span><span class="w"> </span><span class="n">main</span><span class="w"></span>
 <span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">x86_64</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">gnu</span><span class="o">-</span><span class="nl">ld</span><span class="p">:</span><span class="w"> </span><span class="n">CMakeFiles</span><span class="o">/</span><span class="n">main</span><span class="p">.</span><span class="n">dir</span><span class="o">/</span><span class="n">main</span><span class="p">.</span><span class="n">cpp</span><span class="p">.</span><span class="nl">o</span><span class="p">:</span><span class="w"> </span><span class="n">undefined</span><span class="w"> </span><span class="n">reference</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">symbol</span><span class="w"> </span><span class="s1">'_ZN5boost6system15system_categoryEv'</span><span class="w"></span>
@@ -165,20 +165,20 @@ $ cmake ..
 <span class="w"> </span><span class="n">make</span><span class="o">[</span><span class="n">1</span><span class="o">]</span><span class="err">:</span><span class="w"> </span><span class="err">\</span><span class="o">*</span><span class="err">\</span><span class="o">*</span><span class="err">\</span><span class="o">*</span><span class="w"> </span><span class="o">[</span><span class="n">CMakeFiles/main.dir/all</span><span class="o">]</span><span class="w"> </span><span class="n">Error</span><span class="w"> </span><span class="mi">2</span><span class="w"></span>
 <span class="w"> </span><span class="nl">Makefile</span><span class="p">:</span><span class="mi">83</span><span class="err">:</span><span class="w"> </span><span class="n">recipe</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="s1">'all'</span><span class="w"> </span><span class="n">failed</span><span class="w"></span>
 <span class="w"> </span><span class="nl">make</span><span class="p">:</span><span class="w"> </span><span class="err">\</span><span class="o">*</span><span class="err">\</span><span class="o">*</span><span class="err">\</span><span class="o">*</span><span class="w"> </span><span class="o">[</span><span class="n">all</span><span class="o">]</span><span class="w"> </span><span class="n">Error</span><span class="w"> </span><span class="mi">2</span><span class="w"></span>
-</pre>
+</code></pre>
 
 
 <h3>cmake for Microsoft/cpprestsdk</h3>
 <p>Ok, so it doesn't work... surprise, surprise.</p>
 <p>Time to go back to instructions for building <strong>cpprest</strong> on Linux. There is <code>g++</code> instruction 
 at the end of the page. It builds the project with our library:</p>
-<pre class="code literal-block"><span></span><span class="n">g</span><span class="o">++</span> <span class="o">-</span><span class="n">std</span><span class="o">=</span><span class="n">c</span><span class="o">++</span><span class="mi">11</span> <span class="n">my_file</span><span class="p">.</span><span class="n">cpp</span> <span class="o">-</span><span class="n">o</span> <span class="n">my_file</span> <span class="o">-</span><span class="n">lboost_system</span> <span class="o">-</span><span class="n">lcrypto</span> <span class="o">-</span><span class="n">lssl</span> <span class="o">-</span><span class="n">lcpprest</span> <span class="p">.</span><span class="o">/</span><span class="n">my_file</span>
-</pre>
+<pre class="code literal-block"><span></span><code><span class="n">g</span><span class="o">++</span> <span class="o">-</span><span class="n">std</span><span class="o">=</span><span class="n">c</span><span class="o">++</span><span class="mi">11</span> <span class="n">my_file</span><span class="p">.</span><span class="n">cpp</span> <span class="o">-</span><span class="n">o</span> <span class="n">my_file</span> <span class="o">-</span><span class="n">lboost_system</span> <span class="o">-</span><span class="n">lcrypto</span> <span class="o">-</span><span class="n">lssl</span> <span class="o">-</span><span class="n">lcpprest</span> <span class="p">.</span><span class="o">/</span><span class="n">my_file</span>
+</code></pre>
 
 
 <p>And it works... So change our <code>CMakeLists.txt</code>. We want to use <em>Boost</em> and <em>OpenSSL</em> (this 
 library contains both <em>SSL</em> and <em>crypto</em>). Add this two libraries to cmake configuration:</p>
-<pre class="code literal-block"><span></span>...
+<pre class="code literal-block"><span></span><code>...
 find_package<span class="o">(</span>Boost REQUIRED COMPONENTS system<span class="o">)</span>
 find_package<span class="o">(</span>OpenSSL REQUIRED<span class="o">)</span>
                                              <span class="c1"># show lib paths</span>
@@ -190,14 +190,14 @@ target_link_libraries<span class="o">(</span>main PRIVATE
     cpprestsdk::cpprest
     <span class="si">${</span><span class="nv">Boost_LIBRARIES</span><span class="si">}</span>
     <span class="si">${</span><span class="nv">OPENSSL_LIBRARIES</span><span class="si">}</span><span class="o">)</span>
-</pre>
+</code></pre>
 
 
-<pre class="code literal-block"><span></span>$ cmake ..
-</pre>
+<pre class="code literal-block"><span></span><code>$ cmake ..
+</code></pre>
 
 
-<pre class="code literal-block"><span></span><span class="err"> -- The C compiler identification is GNU 7.3.0</span>
+<pre class="code literal-block"><span></span><code><span class="err"> -- The C compiler identification is GNU 7.3.0</span>
 <span class="err"> -- The CXX compiler identification is GNU 7.3.0</span>
 <span class="err"> -- Check for working C compiler: /usr/bin/cc</span>
 <span class="err"> -- Check for working C compiler: /usr/bin/cc -- works</span>
@@ -221,18 +221,18 @@ target_link_libraries<span class="o">(</span>main PRIVATE
 <span class="err"> -- Configuring done</span>
 <span class="err"> -- Generating done</span>
 <span class="err"> -- Build files have been written to: ~/Projects/cpprest01/build</span>
-</pre>
+</code></pre>
 
 
-<pre class="code literal-block"><span></span>$ make
-</pre>
+<pre class="code literal-block"><span></span><code>$ make
+</code></pre>
 
 
-<pre class="code literal-block"><span></span><span class="err"> Scanning dependencies of target main</span>
+<pre class="code literal-block"><span></span><code><span class="err"> Scanning dependencies of target main</span>
 <span class="err"> [ 50%] Building CXX object CMakeFiles/main.dir/main.cpp.o</span>
 <span class="err"> [100%] Linking CXX executable main</span>
 <span class="err"> [100%] Built target main</span>
-</pre>
+</code></pre>
 
 
 <p>Done. One day in a hundred lines...</p>
