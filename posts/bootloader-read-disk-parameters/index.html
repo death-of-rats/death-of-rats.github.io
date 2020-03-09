@@ -167,7 +167,7 @@ informations:</p>
 <p>PoC code shows what I was looking for.</p>
 <pre class="code literal-block"><span></span><code><span class="err">[</span><span class="nf">bits</span> <span class="mi">16</span><span class="p">]</span>
 <span class="err">[</span><span class="nf">org</span> <span class="mi">0x7c00</span><span class="p">]</span>
-<span class="c">; dl has drive number</span>
+<span class="c1">; dl has drive number</span>
 
     <span class="nf">xor</span> <span class="no">ax</span><span class="p">,</span> <span class="no">ax</span>
     <span class="nf">mov</span> <span class="no">ds</span><span class="p">,</span> <span class="no">ax</span>
@@ -264,7 +264,7 @@ informations:</p>
     <span class="nf">mov</span> <span class="no">bh</span><span class="p">,</span> <span class="mi">0</span>
     <span class="nf">mov</span> <span class="no">bl</span><span class="p">,</span> <span class="mi">15</span>
     <span class="nf">mov</span> <span class="no">dx</span><span class="p">,</span> <span class="no">ax</span>
-    <span class="nf">mov</span> <span class="no">cx</span><span class="p">,</span> <span class="mi">0x10</span> <span class="c">; we want to print 16-bit value</span>
+    <span class="nf">mov</span> <span class="no">cx</span><span class="p">,</span> <span class="mi">0x10</span> <span class="c1">; we want to print 16-bit value</span>
     <span class="nl">.repeat_print_value:</span>
     <span class="nf">sub</span> <span class="no">cx</span><span class="p">,</span> <span class="mi">0x04</span>
     <span class="nf">mov</span> <span class="no">ax</span><span class="p">,</span> <span class="no">dx</span>
@@ -301,21 +301,21 @@ informations:</p>
 <span class="nf">new_line</span>            <span class="no">db</span> <span class="mi">0xd</span><span class="p">,</span> <span class="mi">0xa</span><span class="p">,</span> <span class="mi">0x0</span>
 <span class="nf">disk_error_msg</span>      <span class="no">db</span> <span class="err">"</span><span class="no">Disk</span> <span class="no">error</span><span class="p">,</span> <span class="no">could</span> <span class="no">not</span> <span class="no">read</span> <span class="no">disk</span> <span class="no">parameters</span><span class="err">"</span><span class="p">,</span> <span class="mi">0xd</span><span class="p">,</span> <span class="mi">0xa</span><span class="p">,</span> <span class="mi">0x0</span>
 
-<span class="nf">dps</span>     <span class="no">dw</span>  <span class="mi">0x0042</span><span class="p">,</span>                         <span class="c">; size of structure</span>
-        <span class="nf">dw</span>  <span class="mi">0x0000</span><span class="p">,</span>                         <span class="c">; information flags</span>
-        <span class="nf">dw</span>  <span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span><span class="p">,</span>                  <span class="c">; physical num of cylinders</span>
-        <span class="nf">dw</span>  <span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span><span class="p">,</span>                  <span class="c">; physical num of heads</span>
-        <span class="nf">dw</span>  <span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span><span class="p">,</span>                  <span class="c">; physical num of sectors</span>
-        <span class="nf">dw</span>  <span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span><span class="p">,</span>    <span class="c">; absolute num of sectors</span>
-        <span class="nf">dw</span>  <span class="mi">0x0000</span><span class="p">,</span>                         <span class="c">; bytes per sector</span>
-        <span class="nf">dw</span>  <span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span>                   <span class="c">; optional pointer to EDD</span>
-        <span class="nf">dw</span>  <span class="mi">0x0000</span>                          <span class="c">; </span>
+<span class="nf">dps</span>     <span class="no">dw</span>  <span class="mi">0x0042</span><span class="p">,</span>                         <span class="c1">; size of structure</span>
+        <span class="nf">dw</span>  <span class="mi">0x0000</span><span class="p">,</span>                         <span class="c1">; information flags</span>
+        <span class="nf">dw</span>  <span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span><span class="p">,</span>                  <span class="c1">; physical num of cylinders</span>
+        <span class="nf">dw</span>  <span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span><span class="p">,</span>                  <span class="c1">; physical num of heads</span>
+        <span class="nf">dw</span>  <span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span><span class="p">,</span>                  <span class="c1">; physical num of sectors</span>
+        <span class="nf">dw</span>  <span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span><span class="p">,</span>    <span class="c1">; absolute num of sectors</span>
+        <span class="nf">dw</span>  <span class="mi">0x0000</span><span class="p">,</span>                         <span class="c1">; bytes per sector</span>
+        <span class="nf">dw</span>  <span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span>                   <span class="c1">; optional pointer to EDD</span>
+        <span class="nf">dw</span>  <span class="mi">0x0000</span>                          <span class="c1">; </span>
         <span class="nf">dw</span>  <span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span>
-        <span class="nf">dw</span>  <span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span>                   <span class="c">; host bus type ASCII</span>
-        <span class="nf">dw</span>  <span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span>     <span class="c">; interface type ASCII</span>
-        <span class="nf">dw</span>  <span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span>     <span class="c">; interface path</span>
-        <span class="nf">dw</span>  <span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span>     <span class="c">; device path</span>
-        <span class="nf">dw</span>  <span class="mi">0x0000</span>                          <span class="c">; reserved + checksum</span>
+        <span class="nf">dw</span>  <span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span>                   <span class="c1">; host bus type ASCII</span>
+        <span class="nf">dw</span>  <span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span>     <span class="c1">; interface type ASCII</span>
+        <span class="nf">dw</span>  <span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span>     <span class="c1">; interface path</span>
+        <span class="nf">dw</span>  <span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span><span class="p">,</span><span class="mi">0x0000</span>     <span class="c1">; device path</span>
+        <span class="nf">dw</span>  <span class="mi">0x0000</span>                          <span class="c1">; reserved + checksum</span>
 
 <span class="nf">times</span> <span class="p">(</span><span class="mi">0x200</span> <span class="p">-</span> <span class="mi">2</span> <span class="p">-</span> <span class="p">(</span><span class="no">$</span> <span class="p">-</span> <span class="no">$$</span><span class="p">))</span> <span class="no">db</span> <span class="mi">0x00</span>
 <span class="nf">dw</span> <span class="mi">0xaa55</span>

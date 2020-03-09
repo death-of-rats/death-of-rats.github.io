@@ -112,7 +112,7 @@ external. For this purpose, we can use <code>extern</code>. </p>
 finish the program with <code>syscall</code> instead of, for example, <code>ret</code>.
 But now <em>_start</em> function calls  <em>main</em>. <em>main</em> do full stack frame and do
 'echo' job.</p>
-<pre class="code literal-block"><span></span><code><span class="c">; asm01.s - scanf version</span>
+<pre class="code literal-block"><span></span><code><span class="c1">; asm01.s - scanf version</span>
 <span class="nf">global</span> <span class="no">_start</span>
 <span class="nf">extern</span> <span class="no">printf</span>
 <span class="nf">extern</span> <span class="no">scanf</span>
@@ -189,7 +189,7 @@ the end...
 character. Not what I intended. First I go for <em>fgets</em>. But it needs <em>FILE*</em>
 structure for <strong>stdin</strong>. I didn't want to handle standard descriptions
 so I have changed my mind to <em>read</em>.  So change <em>scanf</em> to <em>read</em>.</p>
-<pre class="code literal-block"><span></span><code><span class="c">; asm01.s</span>
+<pre class="code literal-block"><span></span><code><span class="c1">; asm01.s</span>
 <span class="nf">global</span> <span class="no">_start</span>
 <span class="nf">extern</span> <span class="no">printf</span>
 <span class="nf">extern</span> <span class="no">scanf</span>
