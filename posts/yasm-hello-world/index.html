@@ -109,7 +109,7 @@ and OS X" by Ray Seyfarth.</p>
 <p>What I remember from old asm, are sections: <code>.text</code> section for code and
 <code>.data</code> for data. </p>
 <p>Let us start with 'the simplest' example:</p>
-<pre class="code literal-block"><span></span><code><span class="c1">;asm00.s</span>
+<div class="asm codehilite"><pre><span></span><code><span class="c1">;asm00.s</span>
 
 <span class="nf">section</span> <span class="no">.data</span>
     <span class="nf">msg</span>       <span class="no">db</span>     <span class="err">'</span><span class="no">Hello</span> <span class="no">world</span><span class="p">!</span><span class="err">'</span>
@@ -127,21 +127,18 @@ and OS X" by Ray Seyfarth.</p>
     <span class="nf">mov</span> <span class="no">rax</span><span class="p">,</span> <span class="mi">60</span>
     <span class="nf">mov</span> <span class="no">rdi</span><span class="p">,</span> <span class="mi">0</span>
     <span class="nf">syscall</span>
-</code></pre>
-
+</code></pre></div>
 
 <p>To build this code one must run <strong>yasm</strong> assembler and <strong>ld</strong> linker:</p>
-<pre class="code literal-block"><span></span><code>$ yasm -f elf64 asm00.s
+<div class="sh codehilite"><pre><span></span><code>$ yasm -f elf64 asm00.s
 $ ld -o asm00 asm00.o
-</code></pre>
-
+</code></pre></div>
 
 <p>And the effect:</p>
-<pre class="code literal-block"><span></span><code>$ ./asm00
+<div class="sh codehilite"><pre><span></span><code>$ ./asm00
 Hello world!
 $ 
-</code></pre>
-
+</code></pre></div>
 
 <p>Ok, so what happens here? We have here 2 calls to the <em>syscall</em>. The first
 one is calling to <em>sys_write</em> (<code>mov rax, 1</code>) to print to <em>stdout</em> (file

@@ -104,19 +104,19 @@
     </header><div class="e-content entry-content" itemprop="articleBody text">
     <div>
 <p>The third challenge is a reverse engineering problem. The zipped package contains 3 files:</p>
-<pre class="code literal-block"><span></span><code>crackme_baby
+<div class="sh codehilite"><pre><span></span><code>crackme_baby
 crackme.py
 run.sh
-</code></pre>
-
+</code></pre></div>
 
 <p>Python file contains definitions of simple math operations (add, sub, mul, div2, mod, inf). Let us
  disassemble crackme_baby file.
-<!-- TEASER_END --></p>
+<!-- TEASER_END -->
+</p>
 <p>Main function shows us that 2 long variables are in play, <code>d1 = 25052671110843108</code> 
  and <code>d2 = 16420105858350620421142892712</code>. They are passed to <code>calc_flag__object___object</code> to calculate 
 value for the flag. This value is hashed with sha256 and print in format flag{<em>hashed_value</em>}.</p>
-<pre class="code literal-block"><span></span><code><span class="nf">.0x000021c3</span>      <span class="nv">push</span> <span class="nb">rbp</span>                    <span class="c1">; main(int argc, char** argv)</span>
+<div class="nasm codehilite"><pre><span></span><code><span class="nf">.0x000021c3</span>      <span class="nv">push</span> <span class="nb">rbp</span>                    <span class="c1">; main(int argc, char** argv)</span>
 <span class="nf">.0x000021c4</span>      <span class="nv">mov</span> <span class="nb">rbp</span><span class="p">,</span> <span class="nb">rsp</span>
 <span class="nf">.0x000021c7</span>      <span class="nv">push</span> <span class="nb">rbx</span>
 <span class="nf">.0x000021c8</span>      <span class="nv">sub</span> <span class="nb">rsp</span><span class="p">,</span> <span class="mh">0x88</span>
@@ -168,12 +168,11 @@ value for the flag. This value is hashed with sha256 and print in format flag{<e
 <span class="nf">.0x0000229b</span>      <span class="nv">call</span> <span class="nv">sym.std</span><span class="p">::</span><span class="nv">basic_ostream_char_std</span><span class="p">::</span><span class="nb">ch</span><span class="nv">ar_traits_char___std</span><span class="p">::</span><span class="nv">operator___std</span><span class="p">::</span><span class="nb">ch</span><span class="nv">ar_traits_char___std</span><span class="p">::</span><span class="nv">basic_ostream_char_std</span><span class="p">::</span><span class="nb">ch</span><span class="nv">ar_traits_char____charconst</span>
 <span class="nf">.0x000022a0</span>      <span class="nv">mov</span> <span class="nb">rdx</span><span class="p">,</span> <span class="nb">rax</span>
                   <span class="nf">...</span>
-</code></pre>
-
+</code></pre></div>
 
 <p>So it's time to look closer at function <code>calc_flag__object___object</code>. First instructions just load <code>crackme.py</code> 
 and import math functions: </p>
-<pre class="code literal-block"><span></span><code><span class="nf">.0x00001e83</span>      <span class="nv">push</span> <span class="nb">rbp</span>                               
+<div class="nasm codehilite"><pre><span></span><code><span class="nf">.0x00001e83</span>      <span class="nv">push</span> <span class="nb">rbp</span>                               
 <span class="nf">.0x00001e84</span>      <span class="nv">mov</span> <span class="nb">rbp</span><span class="p">,</span> <span class="nb">rsp</span>                
 <span class="nf">.0x00001e87</span>      <span class="nv">sub</span> <span class="nb">rsp</span><span class="p">,</span> <span class="mh">0x70</span>               <span class="c1">; 'p'</span>
 <span class="nf">.0x00001e8b</span>      <span class="nv">mov</span> <span class="kt">qword</span> <span class="p">[</span><span class="nv">local_68h</span><span class="p">],</span> <span class="nb">rdi</span>  <span class="c1">; d1</span>
@@ -219,8 +218,7 @@ and import math functions: </p>
 <span class="nf">.0x00001f41</span>      <span class="nv">mov</span> <span class="nb">rdi</span><span class="p">,</span> <span class="nb">rax</span>
 <span class="nf">.0x00001f44</span>      <span class="nv">call</span> <span class="nv">sym.imp.PyDict_GetItemString</span>
 <span class="nf">.0x00001f49</span>      <span class="nv">mov</span> <span class="kt">qword</span> <span class="p">[</span><span class="nv">local_8h</span><span class="p">],</span> <span class="nb">rax</span>
-</code></pre>
-
+</code></pre></div>
 
 <p>From above code we can extract variables with functions imported and assigned to them:</p>
 <pre class="code literal-block"><span></span><code><span class="err"> local_30h | add</span>
@@ -231,12 +229,10 @@ and import math functions: </p>
 <span class="err"> local_8h  | sup</span>
 </code></pre>
 
-
 <p>and also our longs:</p>
 <pre class="code literal-block"><span></span><code><span class="err"> local_68h | d1</span>
 <span class="err"> local_70h | d2</span>
 </code></pre>
-
 
 <p>We will need this to find out what calculations take place in <code>calc_flag__object___object</code>. 
 I will replace <em>local_xxh</em> with known or chosen names.
@@ -320,7 +316,6 @@ This way the graph below should be easier to understand.</p>
 <span class="s1">     `---------------------------------------------------------'</span><span class="w"> </span>
 </code></pre>
 
-
 <p>Calling python functions convention is to put the address of an imported function to <code>rdi</code> register and
 the address of python object with the first argument to <code>rsi</code>, <code>rdx</code> will have the second argument address. Then there is a call to
  <code>sym.call__object___object___object</code>, the result will be also python object which address will be in <code>rax</code> register.</p>
@@ -352,7 +347,6 @@ the address of python object with the first argument to <code>rsi</code>, <code>
 <span class="n">f</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">flag_str</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">'utf-8'</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
 <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 </code></pre>
-
 
 <p>And here we have the content of the flag.</p>
 <p>...<strong>SQUEAK</strong>!</p>
