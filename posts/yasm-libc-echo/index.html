@@ -112,7 +112,7 @@ external. For this purpose, we can use <code>extern</code>. </p>
 finish the program with <code>syscall</code> instead of, for example, <code>ret</code>.
 But now <em>_start</em> function calls  <em>main</em>. <em>main</em> do full stack frame and do
 'echo' job.</p>
-<div class="asm codehilite"><pre><span></span><code><span class="c1">; asm01.s - scanf version</span>
+<pre class="code literal-block"><span></span><code><span class="c1">; asm01.s - scanf version</span>
 <span class="nf">global</span> <span class="no">_start</span>
 <span class="nf">extern</span> <span class="no">printf</span>
 <span class="nf">extern</span> <span class="no">scanf</span>
@@ -153,7 +153,7 @@ But now <em>_start</em> function calls  <em>main</em>. <em>main</em> do full sta
     <span class="nf">mov</span> <span class="no">rax</span><span class="p">,</span> <span class="mi">60</span>
     <span class="nf">mov</span> <span class="no">rdi</span><span class="p">,</span> <span class="mi">0</span>
     <span class="nf">syscall</span>
-</code></pre></div>
+</code></pre>
 
 <p>To build this I created <strong>Makefile</strong>. In yasm section <code>-g dwarf2</code> is for
 debug information. Linker line is also longer. It linked additional <em>c</em> library
@@ -161,7 +161,7 @@ debug information. Linker line is also longer. It linked additional <em>c</em> l
 this way I've got: 'no such file or directory'. I've read somewhere that <strong>ld</strong>
 has some problems with libc on some distros. The way to solve this is to link
 dynamically real lib. </p>
-<div class="sh codehilite"><pre><span></span><code><span class="c1"># Makefile</span>
+<pre class="code literal-block"><span></span><code><span class="c1"># Makefile</span>
 all: prog
 
 prog: asm01.o
@@ -173,20 +173,20 @@ asm01.o: asm01.s
 clean:
     rm -rf asm01.o
     rm -rf asm01
-</code></pre></div>
+</code></pre>
 
-<div class="sh codehilite"><pre><span></span><code>$ ./asm01 
+<pre class="code literal-block"><span></span><code>$ ./asm01 
 write something <span class="k">for</span> echo:
 Echo is a nice <span class="k">function</span>.... print whatever you put in...
 Echo
 the end...
-</code></pre></div>
+</code></pre>
 
 <p>Hmmm, ok something goes wrong... Ah, yes, <code>%s</code> reads string to a first white
 character. Not what I intended. First I go for <em>fgets</em>. But it needs <em>FILE*</em>
 structure for <strong>stdin</strong>. I didn't want to handle standard descriptions
 so I have changed my mind to <em>read</em>.  So change <em>scanf</em> to <em>read</em>.</p>
-<div class="asm codehilite"><pre><span></span><code><span class="c1">; asm01.s</span>
+<pre class="code literal-block"><span></span><code><span class="c1">; asm01.s</span>
 <span class="nf">global</span> <span class="no">_start</span>
 <span class="nf">extern</span> <span class="no">printf</span>
 <span class="nf">extern</span> <span class="no">scanf</span>
@@ -228,7 +228,7 @@ so I have changed my mind to <em>read</em>.  So change <em>scanf</em> to <em>rea
     <span class="nf">mov</span> <span class="no">rax</span><span class="p">,</span> <span class="mi">60</span>
     <span class="nf">mov</span> <span class="no">rdi</span><span class="p">,</span> <span class="mi">0</span>
     <span class="nf">syscall</span>
-</code></pre></div>
+</code></pre>
 
 <p>Ok, this is what I want. And <strong>Makefile</strong> works like a charm...</p>
 <p> 

@@ -109,30 +109,30 @@ scene.</p>
 <!-- TEASER_END -->
 
 <p>It all starts with a challenge. I'd got program with stack overflow vulnerability:</p>
-<div class="sh codehilite"><pre><span></span><code>$ ./pwn1
+<pre class="code literal-block"><span></span><code>$ ./pwn1
 Tell me your name: AAAA...AAAA
 Hello, AAAA...AAAA
 <span class="o">[</span><span class="m">1</span><span class="o">]</span>    <span class="m">11870</span> segmentation fault <span class="o">(</span>core dumped<span class="o">)</span>  ./pwn1
 $
-</code></pre></div>
+</code></pre>
 
 <p>And when I want to generate payload with value to overwrite return address it won't work. In <strong>gdb</strong> 
 I notice that /my ret address wasn't what I intended it to be. It looks like this:</p>
-<div class="sh codehilite"><pre><span></span><code>$ python3 -c <span class="s2">"print('\x08\x03\xcd\x44')"</span> <span class="p">|</span> hex
+<pre class="code literal-block"><span></span><code>$ python3 -c <span class="s2">"print('\x08\x03\xcd\x44')"</span> <span class="p">|</span> hex
 0803c38d440a
 $ 
-</code></pre></div>
+</code></pre>
 
 <p>Yep, bolded bytes are not mine 0803c<strong>38</strong>d44<strong>0a</strong>. Should I blame python? Lets check:</p>
-<div class="sh codehilite"><pre><span></span><code>$ <span class="nb">echo</span> <span class="s2">"print('\x08\x03\xcd\x44')"</span>
+<pre class="code literal-block"><span></span><code>$ <span class="nb">echo</span> <span class="s2">"print('\x08\x03\xcd\x44')"</span>
 print<span class="o">(</span>�D<span class="err">'</span><span class="o">)</span>
 $ 
-</code></pre></div>
+</code></pre>
 
 <p>Ok, so Python has that bizarre string to process instead of what I expected:</p>
-<div class="sh codehilite"><pre><span></span><code>$ <span class="nb">echo</span> <span class="s1">'\x08\x03\xcd\x44'</span>
+<pre class="code literal-block"><span></span><code>$ <span class="nb">echo</span> <span class="s1">'\x08\x03\xcd\x44'</span>
 <span class="se">\x</span><span class="m">08</span><span class="se">\x</span><span class="m">03</span><span class="se">\x</span>cd<span class="se">\x</span><span class="m">44</span>
-</code></pre></div>
+</code></pre>
 
 <p>So, shell (<strong>zsh</strong>) decode for me chars in command and pass it to python, which apparently does nothing 
 new - just print that chars further. When I switch to /bin/dash everything was as I expected - no evil decoding. I don't
@@ -141,8 +141,8 @@ write solutions in Python script. Maybe I leave things as they are and just chec
 on me.</p>
 <p>For the record, I solve this mystery one day after solving the challenge. So, how I eliminate those magic 
 bytes from my <em>ret</em> address?</p>
-<div class="sh codehilite"><pre><span></span><code>$ python3 -c <span class="s1">'print(138*"A"+"A\u0b44\u0004\u0008")'</span> &gt; pwn1_arg2
-</code></pre></div>
+<pre class="code literal-block"><span></span><code>$ python3 -c <span class="s1">'print(138*"A"+"A\u0b44\u0004\u0008")'</span> &gt; pwn1_arg2
+</code></pre>
 
 <p>Yep, I found (by hand) encoded values which after decoding should give me my original bytes...</p>
 <p><strong>...SQUEAK!</strong></p>

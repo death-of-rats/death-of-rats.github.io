@@ -114,7 +114,7 @@ with your site and change some settings. I checked <em>Build only if .travis.yml
 pushed branches</em> and <em>Build pushed pull requests</em>. </p>
 <p>As the 'checkbox' says Travis will build only if <em>.travis.yml</em> is present. So add it to the repo! 
 Travis should do 2 things: build static files and deploy them to master. The first part should look like:</p>
-<div class="yml codehilite"><pre><span></span><code><span class="k">language</span><span class="err">:</span><span class="w"> </span><span class="n">python</span><span class="w"></span>
+<pre class="code literal-block"><span></span><code><span class="k">language</span><span class="err">:</span><span class="w"> </span><span class="n">python</span><span class="w"></span>
 <span class="nl">cache</span><span class="p">:</span><span class="w"> </span><span class="n">apt</span><span class="w"></span>
 <span class="nl">sudo</span><span class="p">:</span><span class="w"> </span><span class="k">false</span><span class="w"></span>
 <span class="nl">addons</span><span class="p">:</span><span class="w"></span>
@@ -130,7 +130,7 @@ Travis should do 2 things: build static files and deploy them to master. The fir
 <span class="o">-</span><span class="w"> </span><span class="n">pip</span><span class="w"> </span><span class="n">install</span><span class="w"> </span><span class="s1">'Nikola[extras]'</span><span class="o">==</span><span class="mf">8.0.0</span><span class="p">.</span><span class="n">b2</span><span class="w"></span>
 <span class="nl">script</span><span class="p">:</span><span class="w"></span>
 <span class="o">-</span><span class="w"> </span><span class="n">nikola</span><span class="w"> </span><span class="n">build</span><span class="w"> </span>
-</code></pre></div>
+</code></pre>
 
 <p>First 9 lines: Nikola is written in python, it is why we need it in, at least, version 3. 
 Travis should ignore any changes on master branch (he will do them himself after all), that's the 
@@ -139,7 +139,7 @@ version 8.0.0.b2 for its built-in theme. By default, <strong>pip</strong> instal
 this 'work' there is time for build script: <code>nikola build</code>.</p>
 <p>Ok, so now we have our site build. How deploy it on GitHub Pages? One could play with <code>nikola deploy</code> 
 or a few <code>git</code> commands, but Travis has a deploy provider for that:</p>
-<div class="yml codehilite"><pre><span></span><code><span class="n">deploy</span><span class="o">:</span>
+<pre class="code literal-block"><span></span><code><span class="n">deploy</span><span class="o">:</span>
     <span class="n">provider</span><span class="o">:</span> <span class="n">pages</span>
     <span class="n">skip</span><span class="o">-</span><span class="n">cleanup</span><span class="o">:</span> <span class="kc">true</span>
     <span class="n">keep</span><span class="o">-</span><span class="n">history</span><span class="o">:</span> <span class="kc">true</span>
@@ -150,7 +150,7 @@ or a few <code>git</code> commands, but Travis has a deploy provider for that:</
     <span class="n">repo</span><span class="o">:</span> <span class="n">death</span><span class="o">-</span><span class="n">of</span><span class="o">-</span><span class="n">rats</span><span class="o">/</span><span class="n">death</span><span class="o">-</span><span class="n">of</span><span class="o">-</span><span class="n">rats</span><span class="o">.</span><span class="na">github</span><span class="o">.</span><span class="na">io</span>
     <span class="n">on</span><span class="o">:</span>
         <span class="n">branch</span><span class="o">:</span> <span class="n">source</span>
-</code></pre></div>
+</code></pre>
 
 <p>More information could be found at <a href="https://docs.travis-ci.com/user/deployment/pages/">TCI01</a>. 
 I added <code>local-dir</code> to set what should be deployed and where (<code>repo</code> and <code>target-branch: master</code>). 

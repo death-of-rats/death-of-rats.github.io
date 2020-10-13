@@ -104,10 +104,10 @@
     </header><div class="e-content entry-content" itemprop="articleBody text">
     <div>
 <p>The third challenge is a reverse engineering problem. The zipped package contains 3 files:</p>
-<div class="sh codehilite"><pre><span></span><code>crackme_baby
+<pre class="code literal-block"><span></span><code>crackme_baby
 crackme.py
 run.sh
-</code></pre></div>
+</code></pre>
 
 <p>Python file contains definitions of simple math operations (add, sub, mul, div2, mod, inf). Let us
  disassemble crackme_baby file.
@@ -116,7 +116,7 @@ run.sh
 <p>Main function shows us that 2 long variables are in play, <code>d1 = 25052671110843108</code> 
  and <code>d2 = 16420105858350620421142892712</code>. They are passed to <code>calc_flag__object___object</code> to calculate 
 value for the flag. This value is hashed with sha256 and print in format flag{<em>hashed_value</em>}.</p>
-<div class="nasm codehilite"><pre><span></span><code><span class="nf">.0x000021c3</span>      <span class="nv">push</span> <span class="nb">rbp</span>                    <span class="c1">; main(int argc, char** argv)</span>
+<pre class="code literal-block"><span></span><code><span class="nf">.0x000021c3</span>      <span class="nv">push</span> <span class="nb">rbp</span>                    <span class="c1">; main(int argc, char** argv)</span>
 <span class="nf">.0x000021c4</span>      <span class="nv">mov</span> <span class="nb">rbp</span><span class="p">,</span> <span class="nb">rsp</span>
 <span class="nf">.0x000021c7</span>      <span class="nv">push</span> <span class="nb">rbx</span>
 <span class="nf">.0x000021c8</span>      <span class="nv">sub</span> <span class="nb">rsp</span><span class="p">,</span> <span class="mh">0x88</span>
@@ -168,11 +168,11 @@ value for the flag. This value is hashed with sha256 and print in format flag{<e
 <span class="nf">.0x0000229b</span>      <span class="nv">call</span> <span class="nv">sym.std</span><span class="p">::</span><span class="nv">basic_ostream_char_std</span><span class="p">::</span><span class="nb">ch</span><span class="nv">ar_traits_char___std</span><span class="p">::</span><span class="nv">operator___std</span><span class="p">::</span><span class="nb">ch</span><span class="nv">ar_traits_char___std</span><span class="p">::</span><span class="nv">basic_ostream_char_std</span><span class="p">::</span><span class="nb">ch</span><span class="nv">ar_traits_char____charconst</span>
 <span class="nf">.0x000022a0</span>      <span class="nv">mov</span> <span class="nb">rdx</span><span class="p">,</span> <span class="nb">rax</span>
                   <span class="nf">...</span>
-</code></pre></div>
+</code></pre>
 
 <p>So it's time to look closer at function <code>calc_flag__object___object</code>. First instructions just load <code>crackme.py</code> 
 and import math functions: </p>
-<div class="nasm codehilite"><pre><span></span><code><span class="nf">.0x00001e83</span>      <span class="nv">push</span> <span class="nb">rbp</span>                               
+<pre class="code literal-block"><span></span><code><span class="nf">.0x00001e83</span>      <span class="nv">push</span> <span class="nb">rbp</span>                               
 <span class="nf">.0x00001e84</span>      <span class="nv">mov</span> <span class="nb">rbp</span><span class="p">,</span> <span class="nb">rsp</span>                
 <span class="nf">.0x00001e87</span>      <span class="nv">sub</span> <span class="nb">rsp</span><span class="p">,</span> <span class="mh">0x70</span>               <span class="c1">; 'p'</span>
 <span class="nf">.0x00001e8b</span>      <span class="nv">mov</span> <span class="kt">qword</span> <span class="p">[</span><span class="nv">local_68h</span><span class="p">],</span> <span class="nb">rdi</span>  <span class="c1">; d1</span>
@@ -218,7 +218,7 @@ and import math functions: </p>
 <span class="nf">.0x00001f41</span>      <span class="nv">mov</span> <span class="nb">rdi</span><span class="p">,</span> <span class="nb">rax</span>
 <span class="nf">.0x00001f44</span>      <span class="nv">call</span> <span class="nv">sym.imp.PyDict_GetItemString</span>
 <span class="nf">.0x00001f49</span>      <span class="nv">mov</span> <span class="kt">qword</span> <span class="p">[</span><span class="nv">local_8h</span><span class="p">],</span> <span class="nb">rax</span>
-</code></pre></div>
+</code></pre>
 
 <p>From above code we can extract variables with functions imported and assigned to them:</p>
 <pre class="code literal-block"><span></span><code><span class="err"> local_30h | add</span>
