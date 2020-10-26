@@ -110,9 +110,9 @@ run.sh
 </code></pre>
 
 <p>Python file contains definitions of simple math operations (add, sub, mul, div2, mod, inf). Let us
- disassemble crackme_baby file.
+ disassemble crackme_baby file.</p>
 <!-- TEASER_END -->
-</p>
+
 <p>Main function shows us that 2 long variables are in play, <code>d1 = 25052671110843108</code> 
  and <code>d2 = 16420105858350620421142892712</code>. They are passed to <code>calc_flag__object___object</code> to calculate 
 value for the flag. This value is hashed with sha256 and print in format flag{<em>hashed_value</em>}.</p>
