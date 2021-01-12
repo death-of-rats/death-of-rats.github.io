@@ -173,7 +173,7 @@ pwndbg&gt; target remote localhost:8000
 Remote debugging using localhost:8000
 warning: No executable has been specified and target does not support
 determining executable automatically.  Try using the <span class="s2">"file"</span> command.
-0x0000fff0 in ?? <span class="o">()</span>
+0x0000fff0 <span class="k">in</span> ?? <span class="o">()</span>
 Could not check ASLR: Couldn<span class="err">'</span>t get personality
 LEGEND: STACK <span class="p">|</span> HEAP <span class="p">|</span> CODE <span class="p">|</span> DATA <span class="p">|</span> RWX <span class="p">|</span> RODATA
 ─────────────────────────────<span class="o">[</span> REGISTERS <span class="o">]</span>──────────────────────────────
@@ -208,7 +208,7 @@ Breakpoint <span class="m">1</span> at 0x7c00
 pwndbg&gt; c
 Continuing.
 
-Breakpoint <span class="m">1</span>, 0x00007c00 in ?? <span class="o">()</span>
+Breakpoint <span class="m">1</span>, 0x00007c00 <span class="k">in</span> ?? <span class="o">()</span>
 LEGEND: STACK <span class="p">|</span> HEAP <span class="p">|</span> CODE <span class="p">|</span> DATA <span class="p">|</span> RWX <span class="p">|</span> RODATA
 ──────────────────────────────<span class="o">[</span> REGISTERS <span class="o">]</span>───────────────────────────────
  EAX  0xaa55 —▸ <span class="m">0</span> —▸ 0xf000ff53 ◂— <span class="m">0</span>
