@@ -221,17 +221,17 @@ and import math functions: </p>
 </code></pre>
 
 <p>From above code we can extract variables with functions imported and assigned to them:</p>
-<pre class="code literal-block"><span></span><code><span class="err"> local_30h | add</span>
-<span class="err"> local_28h | sub</span>
-<span class="err"> local_20h | mul</span>
-<span class="err"> local_18h | div2</span>
-<span class="err"> local_10h | mod</span>
-<span class="err"> local_8h  | sup</span>
+<pre class="code literal-block"><span></span><code> local_30h | add
+ local_28h | sub
+ local_20h | mul
+ local_18h | div2
+ local_10h | mod
+ local_8h  | sup
 </code></pre>
 
 <p>and also our longs:</p>
-<pre class="code literal-block"><span></span><code><span class="err"> local_68h | d1</span>
-<span class="err"> local_70h | d2</span>
+<pre class="code literal-block"><span></span><code> local_68h | d1
+ local_70h | d2
 </code></pre>
 
 <p>We will need this to find out what calculations take place in <code>calc_flag__object___object</code>. 
@@ -345,7 +345,7 @@ the address of python object with the first argument to <code>rsi</code>, <code>
 <span class="n">flag</span> <span class="o">=</span> <span class="n">arg2</span> <span class="o">-</span> <span class="n">bigestPrime</span>
 <span class="n">flag_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">flag</span><span class="p">)</span>
 <span class="n">f</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">flag_str</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">'utf-8'</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
-<span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 </code></pre>
 
 <p>And here we have the content of the flag.</p>
