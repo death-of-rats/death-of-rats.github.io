@@ -115,10 +115,10 @@ loop is very simple, we just <code>while</code> infinitely.</p>
 <span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
 
-<span class="k">using</span> <span class="k">namespace</span> <span class="n">web</span><span class="p">;</span>
-<span class="k">using</span> <span class="k">namespace</span> <span class="n">web</span><span class="o">::</span><span class="n">http</span><span class="p">;</span>
-<span class="k">using</span> <span class="k">namespace</span> <span class="n">web</span><span class="o">::</span><span class="n">http</span><span class="o">::</span><span class="n">experimental</span><span class="o">::</span><span class="n">listener</span><span class="p">;</span>
-<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="nn">web</span><span class="p">;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="nn">web</span><span class="o">::</span><span class="nn">http</span><span class="p">;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="nn">web</span><span class="o">::</span><span class="nn">http</span><span class="o">::</span><span class="nn">experimental</span><span class="o">::</span><span class="nn">listener</span><span class="p">;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="nn">std</span><span class="p">;</span>
 
 <span class="kt">void</span> <span class="nf">handle_get</span><span class="p">(</span><span class="n">http_request</span> <span class="n">request</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">wcout</span> <span class="o">&lt;&lt;</span> <span class="sa">L</span><span class="s">"[HTTP] GET</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
